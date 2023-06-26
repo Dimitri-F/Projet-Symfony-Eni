@@ -25,9 +25,6 @@ class Participant
     private ?string $telephone = null;
 
     #[ORM\Column]
-    private ?bool $administrateur = null;
-
-    #[ORM\Column]
     private ?bool $actif = null;
 
     #[ORM\ManyToOne(inversedBy: 'participants')]
@@ -36,6 +33,10 @@ class Participant
 
     #[ORM\ManyToMany(targetEntity: Inscription::class, mappedBy: 'participants')]
     private Collection $inscriptions;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?user $compte = null;
 
     public function __construct()
     {
@@ -79,18 +80,6 @@ class Participant
     public function setTelephone(?string $telephone): static
     {
         $this->telephone = $telephone;
-
-        return $this;
-    }
-
-    public function isAdministrateur(): ?bool
-    {
-        return $this->administrateur;
-    }
-
-    public function setAdministrateur(bool $administrateur): static
-    {
-        $this->administrateur = $administrateur;
 
         return $this;
     }
@@ -142,6 +131,18 @@ class Participant
         if ($this->inscriptions->removeElement($inscription)) {
             $inscription->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    public function getCompte(): ?user
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(user $compte): static
+    {
+        $this->compte = $compte;
 
         return $this;
     }
