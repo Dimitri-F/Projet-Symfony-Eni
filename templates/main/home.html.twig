@@ -8,8 +8,55 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <script
+            type="text/javascript"
+            src="../node_modules/tw-elements/dist/js/tw-elements.umd.min.js"></script>
 
+<div class="example-wrapper">
+    <h1>Hello ✅</h1>
 </div>
+    <h1 class="text-right">Date du jour : xxx</h1>
+    <h1 class="text-right">Participant : xxx</h1>
+    <h1>Filtrer les sorties</h1>
+    <br>
+
+    {# Select site #}
+
+    <div class="flex">
+        <div class="relative">
+            <p class="absolute inset-y-0 flex items-center">Site : </p>
+            <select class="select w-full max-w-xs ml-36">
+                <option disabled selected>sélectionner un site</option>
+                <option>xxx</option>
+                <option>xxx</option>
+                <option>xxx</option>
+            </select>
+        </div>
+    </div>
+
+    {# Recherche #}
+
+    <div class="flex">
+        <div class="relative">
+            <p class="absolute inset-y-0 flex items-center">Le nom de la sortie contient : </p>
+            <input type="text" placeholder="recherche" class="input w-full max-w-xs input-bordered ml-52" />
+        </div>
+    </div>
+
+    {# Calendrier #}
+
+    <div class="flex">
+        <div class="relative">
+            <p class="absolute inset-y-0 flex items-center">Entre :</p>
+            <div class="relative mb-3" data-te-datepicker-init data-te-inline="true" data-te-input-wrapper-init>
+                <input type="text" class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0" placeholder="Select a date" />
+                <label for="floatingInput" class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Select a date</label>
+            </div>
+            <p class="absolute inset-y-0 flex items-center">et</p>
+            <div class="relative mb-3" data-te-datepicker-init data-te-inline="true" data-te-input-wrapper-init>
+                <input type="text" class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0" placeholder="Select a date" />
+                <label for="floatingInput" class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Select a date</label>
+            </div>
+        </div>
+    </div>
 {% endblock %}

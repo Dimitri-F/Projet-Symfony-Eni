@@ -11,7 +11,7 @@ class MainController extends AbstractController
 {
 
     #[Route('/', name: 'app_login')]
-    public function home(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
 
         // get the login error if there is one
@@ -20,6 +20,12 @@ class MainController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    #[Route('/home', name: 'app_home')]
+    public function home(): Response
+    {
+        return $this->render('main/home.html.twig');
     }
 
 }

@@ -7,3 +7,12 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
+
+// Initialization for ES Users
+import {
+    Datepicker,
+    Input,
+    initTE,
+} from "tw-elements";
+
+initTE({ Datepicker, Input });
