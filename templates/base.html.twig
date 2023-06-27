@@ -28,9 +28,9 @@
                     <a class="mr-5 hover:text-gray-900">Sites</a>
                     {% endif %}
                     {% if is_granted("ROLE_USER") %}
-                    <a class="mr-5 hover:text-gray-900">Accueil</a>
+                    <a href="{{ path('app_home') }}" class="mr-5 hover:text-gray-900">Accueil</a>
                     <a class="mr-5 hover:text-gray-900">Mon profil</a>
-                    <a class="mr-5 hover:text-gray-900">Se déconnecter</a>
+                    <a href="{{ path('app_logout') }}" class="mr-5 hover:text-gray-900">Se déconnecter</a>
                     {% endif %}
                 </nav>
             </div>
