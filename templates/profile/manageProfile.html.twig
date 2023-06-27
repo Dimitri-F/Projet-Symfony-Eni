@@ -3,5 +3,47 @@
 {% block title %}Mon profil{% endblock %}
 
 {% block body %}
-    <h1>Mon profil</h1>
+    <h1 class="text-center text-4xl mb-6">Mon profil</h1>
+    <div class="flex justify-center mb-3">
+
+        {{ form_start(profileForm) }}
+        <div class="mb-3 flex justify-between">
+            {{ form_label(profileForm.compte) }}
+            {{ form_widget(profileForm.compte) }}
+            {{ form_errors(profileForm.compte) }}
+        </div>
+
+        <div class="group mb-3 flex justify-between">
+            {{ form_label(profileForm.prenom) }}
+            {{ form_widget(profileForm.prenom) }}
+            {{ form_errors(profileForm.prenom) }}
+        </div>
+        <div class="group mb-3 flex justify-between">
+            {{ form_label(profileForm.nom) }}
+            {{ form_widget(profileForm.nom) }}
+            {{ form_errors(profileForm.nom) }}
+        </div>
+        <div class="group mb-3 flex justify-between">
+            {{ form_label(profileForm.telephone) }}
+            {{ form_widget(profileForm.telephone) }}
+            {{ form_errors(profileForm.telephone) }}
+        </div>
+        <div class="group mb-3 flex justify-between">
+            {{ form_label(profileForm.email) }}
+            {{ form_widget(profileForm.email) }}
+            {{ form_errors(profileForm.email) }}
+        </div>
+        <div class="group mb-3 flex justify-between">
+            {{ form_label(profileForm.motDePasse) }}
+            {{ form_widget(profileForm.motDePasse) }}
+            {{ form_errors(profileForm.motDePasse) }}
+        </div>
+        <div class="group mb-3 flex justify-between">
+            {{ form_label(profileForm.motDePasse2) }}
+            {{ form_widget(profileForm.motDePasse2) }}
+            {{ form_errors(profileForm.motDePasse2) }}
+        </div>
+        {{ form_end(profileForm) }}
+    </div>
+
 {% endblock %}
