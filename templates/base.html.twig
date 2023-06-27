@@ -1,18 +1,37 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Bucket List{% endblock %}</title>
+    <link rel="icon" href="">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+    <link rel="stylesheet" href="">
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+
+    </header>
+
+    <main class="container">
+        {% block body %}
+
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    </main>
+
+    <footer class="mt-5">
+        <p class="text-center text-uppercase">
+            &copy; Sortir :  {{ "now"| date("Y") }}
+        </p>
+    </footer>
+</div>
+
+
+</body>
 </html>
