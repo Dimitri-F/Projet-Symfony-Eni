@@ -39,6 +39,37 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function findFilteredSorties($data)
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        if ($data['site']) {
+            $qb->andWhere('s.site = :site')
+                ->setParameter('site', $data['site']);
+        }
+
+        if ($data['nomSortie']) {
+            $qb->andWhere('s.nom LIKE :nomSortie')
+                ->setParameter('nomSortie', '%'.$data['nomSortie'].'%');
+        }
+
+        if ($data['dateStart']) {
+            $qb->andWhere('s.dateDebut >= :dateStart')
+                ->setParameter('dateStart', $data['dateStart']);
+        }
+
+        if ($data['dateEnd']) {
+            $qb->andWhere('s.dateDebut <= :dateEnd')
+                ->setParameter('dateEnd', $data['dateEnd']);
+        }
+
+        // Pour les autres filtres basés sur le participant, vous aurez besoin de les traiter en fonction de votre logique d'application.
+
+        return $qb->getQuery()->getResult();
+    }
+
+
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
