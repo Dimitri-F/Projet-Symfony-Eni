@@ -40,7 +40,7 @@ class SortieRepository extends ServiceEntityRepository
     }
 
 
-    public function findFilteredSorties($data)
+    public function findFilteredSorties($data, $isOrganisateur, $isInscrit, $isNotInscrit, $isPassed)
     {
         $qb = $this->createQueryBuilder('s');
 
@@ -64,7 +64,30 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('dateEnd', $data['dateEnd']);
         }
 
-        // Pour les autres filtres basés sur le participant, vous aurez besoin de les traiter en fonction de votre logique d'application.
+        if ($isOrganisateur) {
+            $qb->andWhere('s.organisateur = :organisateur')
+                ->setParameter('organisateur', $data['userId']);
+        }
+
+        if ($isInscrit && $isNotInscrit) {
+        } else {
+            if ($isInscrit) {
+                $qb->andWhere('s.id IN (:id)')
+                    ->setParameter('id', $data['inscrit']);
+            }
+
+            if ($isNotInscrit) {
+                $qb->andWhere('s.id NOT IN (:id)')
+                    ->setParameter('id', $data['inscrit']);
+            }
+        }
+
+        if ($isPassed) {
+            $now = new \DateTime(null, new \DateTimeZone('Europe/Paris')); // Ajustez le fuseau horaire à votre localisation
+            $qb->andWhere('s.dateDebut > :now')
+                ->setParameter('now', $now);
+        }
+
 
         return $qb->getQuery()->getResult();
     }

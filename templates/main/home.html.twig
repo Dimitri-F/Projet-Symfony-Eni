@@ -118,14 +118,25 @@
             <td>{{ sortie.nom }}</td>
             <td>{{ sortie.dateDebut.format('d-m-Y H:i:s') }}</td>
             <td>{{ sortie.dateCloture.format('d-m-Y') }}</td>
-            <td>/{{ sortie.nbInscriptionsMax }}</td>
+            <td> {{ inscriptionsTotals[sortie.id] }} / {{ sortie.nbInscriptionsMax }} </td>
             <td>{% for etat in etats %}
                     {% if etat.id == sortie.etatSortie %}
                         {{ etat.libelle }}
                     {% endif %}
                 {% endfor %}
             </td>
-            <td>xxx</td>
+            <td>
+                {% set checkbox = true %}
+                {% for inscription in inscriptions %}
+                    {% if sortie.id == inscription %}
+                        <input type="checkbox" checked="checked" class="checkbox checkbox-xs" disabled />
+                        {% set checkbox = false %}
+                    {% endif %}
+                {% endfor %}
+                {% if checkbox %}
+                    <input type="checkbox" class="checkbox checkbox-xs" disabled />
+                {% endif %}
+            </td>
             <td>{% for participant in participants %}
                     {% if participant.id == sortie.organisateur %}
                         {{ participant.prenom }} {{ participant.nom }}
@@ -140,6 +151,6 @@
 </div>
     <br>
 {#    Boutton#}
-    <button class="btn">Créer une sortie</button>
+{#    <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>#}
 
 {% endblock %}
