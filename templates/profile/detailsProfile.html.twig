@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+    {% if is_granted("ROLE_USER") %}
+        <h1 class="text-center text-4xl mb-6">{{ app.user.pseudo }}</h1>
+    {% endif %}
+
+    <div class="my-24 mx-auto md:px-6 w-full">
+        <div class="flex justify-center items-center">
+            <!-- Section: Design Block -->
+            <section class="w-4/5 mb-32 m-auto">
+                <div class="flex flex-wrap">
+                    <div class="w-full shrink-0 grow-0 basis-auto md:w-2/12 lg:w-3/12">
+                        <img src="https://fakeimg.pl/350x200/?text=World&font=lobster">
+                    </div>
+
+                    <div class="w-1/2 shrink-0 grow-0 basis-auto text-center md:w-10/12 md:pl-6 md:text-left lg:w-9/12">
+                        <ul class="w-1/2 list-inside mb-6 justify-evenly md:justify-start mx-16">
+                            <li class="mb-6 ml-20 flex items-center">
+                                <span class="mr-auto">Prénom:</span>
+                                <span class="ml-auto">{{ participant.prenom }}</span>
+                            </li>
+                            <li class="mb-6 ml-20 flex items-center">
+                                <span class="mr-auto">Nom:</span>
+                                <span class="ml-2">{{ participant.nom }}</span>
+                            </li>
+                            <li class="mb-6 ml-20 flex items-center">
+                                <span class="mr-auto">Téléphone :</span>
+                                <span class="ml-4">{{ participant.telephone }}</span>
+                            </li>
+                            <li class="mb-6 ml-20 flex items-center">
+                                <span class="mr-auto">Email:</span>
+                                <span class="ml-4">{{ participant.compte.email }}</span>
+                            </li>
+                            <li class="mb-6 ml-20 flex items-center">
+                                <span class="mr-auto">Site de rattachement :</span>
+                                <span class="ml-4">{{ participant.site.nom }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center w-1/2 text-center">
+                    <a href="{{ path('app_home') }}" class="bg-red-700 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-10 ml-52">Retour</a>
+                    <a href="{{ path('manage_profile', {'id':app.user.id}) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-10 ml-52">Modifier</a>
+                </div>
+            </section>
+            <!-- Section: Design Block -->
+        </div>
+
+    </div>
+    <!-- Container for demo purpose -->
+
+{% endblock %}
