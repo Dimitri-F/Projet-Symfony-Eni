@@ -17,21 +17,47 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProfileController extends AbstractController
 {
 
-    #[Route('/profile', name: 'app_profile')]
-    public function manageProfile(EntityManagerInterface $entityManager,
+    #[Route('/profile/details/{id}',
+        name: 'details_profile',
+        requirements: ["id" => "\d+"]
+    )]
+    public function profileDetails($id, ParticipantRepository $participantRepository): Response
+    {
+        $participant = $participantRepository->find($id);
+
+        return $this->render('profile/detailsProfile.html.twig', [
+            "participant" => $participant
+        ]);
+    }
+
+    #[Route('/profile/{id}',
+        name: 'manage_profile',
+        requirements: ["id" => "\d+"]
+    )]
+    public function manageProfile($id, EntityManagerInterface $entityManager,
                                   ParticipantRepository $participantRepository,
                                     Request $request
     ): Response
     {
-        $participant = new Participant();
-        $user = new User();
+        $participant = $participantRepository->find($id);
+
         $profileForm = $this->createForm(ProfileManagerType::class, $participant);
         $profileForm->handleRequest($request);
-//        $participant = $participantRepository->find($id);
+
+        if ($profileForm->isSubmitted()){
+            if ($request->request->has('save')) {
+                // Le bouton "save" a été soumis
+
+            } elseif ($request->request->has('cancel')) {
+                // Le bouton "cancel" a été soumis
+
+            }
+        }
 
         return $this->render('profile/manageProfile.html.twig', [
             "profileForm" => $profileForm->createView(),
             "participant" => $participant,
         ]);
     }
+
 }

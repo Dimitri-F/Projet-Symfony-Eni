@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1 class="text-center text-4xl mb-6">Mon profil</h1>
-    <div class="flex justify-center mb-3">
+    <div class="flex  mb-3 profileForm">
 
         {{ form_start(profileForm) }}
         <div class="mb-3 flex justify-between">
@@ -42,6 +42,16 @@
             {{ form_label(profileForm.motDePasse2) }}
             {{ form_widget(profileForm.motDePasse2) }}
             {{ form_errors(profileForm.motDePasse2) }}
+        </div>
+        <div class="group mb-3 flex justify-between">
+            {{ form_label(profileForm.site) }}
+            {{ form_widget(profileForm.site) }}
+            {{ form_errors(profileForm.site) }}
+        </div>
+
+        <div class="group mb-3 flex justify-between">
+            <button name="save" class="bg-green-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Enregistrer</button>
+            <button name="cancel" class="bg-red-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Annuler</button>
         </div>
         {{ form_end(profileForm) }}
     </div>

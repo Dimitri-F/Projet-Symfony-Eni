@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,37 +18,42 @@ class ProfileManagerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('compte', EntityType::class, [
-                'class' => User::class,
+            ->add('compte', TextType::class, [
                 'label' => 'Pseudo',
-                'choice_label' => 'Pseudo',
-                'mapped' => false
+                'mapped' => false,
+                'data' => null
             ])
             ->add('prenom', null, [
-                'label' => 'Prénom'
+                'label' => 'Prénom',
+                'data' => null
             ])
             ->add('nom', null, [
-                'label' => 'nom'
+                'label' => 'nom',
+                'data' => null
             ])
             ->add('telephone', null, [
-                'label' => 'téléphone'
+                'label' => 'téléphone',
+                'data' => null
             ])
-            ->add('email', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'email',
+            ->add('email', EmailType::class, [
+                'label' => 'email',
                 'mapped' => false,
+                'data' => null
             ])
             ->add('motDePasse', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'mapped' => false,
+                'data' => null
             ])
             ->add('motDePasse2', PasswordType::class, [
                 'label' => 'Confirmation',
                 'mapped' => false,
+                'data' => null
             ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
-                'choice_label' => 'nom'
+                'choice_label' => 'nom',
+                'mapped' => false
             ])
         ;
     }
