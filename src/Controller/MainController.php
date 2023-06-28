@@ -82,7 +82,6 @@ class MainController extends AbstractController
 
         return $this->render('main/home.html.twig', [
             'filterForm' => $form->createView(),
-            'sites' => $sites,
             'sorties' => $sorties,
             'etats' => $etats,
             'participants' => $participants,

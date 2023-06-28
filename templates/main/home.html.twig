@@ -143,7 +143,20 @@
                     {% endif %}
                 {% endfor %}
             </td>
-            <td>xxx</td>
+            <td>
+                <a>Afficher</a>
+                {% if checkbox and sortie.organisateur != user.id %}
+                     - <a>S'inscrire</a>
+                {% elseif checkbox == false %}
+                     - <a>Se désister</a>
+                {% elseif sortie.organisateur == user.id %}
+                    {% if sortie.etat.id == 1 %}
+                        - <a>Publier</a>
+                    {% else %}
+                        - <a>Annuler</a>
+                    {% endif %}
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
         </tbody>
