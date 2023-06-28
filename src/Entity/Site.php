@@ -15,7 +15,7 @@ class Site
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 50)]
     private ?string $nom = null;
 
     #[ORM\OneToMany(mappedBy: 'site', targetEntity: sortie::class)]

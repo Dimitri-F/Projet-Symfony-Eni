@@ -2,7 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-.profileForm{
-    width: 0vw;
-    margin: 0 auto;
-}
+

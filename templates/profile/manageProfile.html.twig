@@ -8,9 +8,8 @@
 
         {{ form_start(profileForm) }}
         <div class="mb-3 flex justify-between">
-            {{ form_label(profileForm.compte) }}
-            {{ form_widget(profileForm.compte) }}
-            {{ form_errors(profileForm.compte) }}
+            <label for="pseudo">Pseudo :</label>
+            <input id="pseudo" name="pseudo" type="text" value="{{ app.user.pseudo }}">
         </div>
 
         <div class="group mb-3 flex justify-between">
@@ -29,29 +28,37 @@
             {{ form_errors(profileForm.telephone) }}
         </div>
         <div class="group mb-3 flex justify-between">
-            {{ form_label(profileForm.email) }}
-            {{ form_widget(profileForm.email) }}
-            {{ form_errors(profileForm.email) }}
+            <label for="email">Email :</label>
+            <input id="email" name="email" type="email" value="{{ app.user.email }}">
         </div>
         <div class="group mb-3 flex justify-between">
-            {{ form_label(profileForm.motDePasse) }}
-            {{ form_widget(profileForm.motDePasse) }}
-            {{ form_errors(profileForm.motDePasse) }}
+            <label for="password">Mot de passe :</label>
+            <input id="password" name="password" type="password">
         </div>
         <div class="group mb-3 flex justify-between">
-            {{ form_label(profileForm.motDePasse2) }}
-            {{ form_widget(profileForm.motDePasse2) }}
-            {{ form_errors(profileForm.motDePasse2) }}
+            <label for="password2">Confirmation :</label>
+            <input id="password2" name="password2" type="password">
         </div>
         <div class="group mb-3 flex justify-between">
+{#            <label for="sites">Site de rattachement:</label>#}
+
+{#            <select name="site" id="sites">#}
+{#                <option value="">--Please choose an option--</option>#}
+{#                <option value="dog">Dog</option>#}
+{#                <option value="cat">Cat</option>#}
+{#                <option value="hamster">Hamster</option>#}
+{#                <option value="parrot">Parrot</option>#}
+{#                <option value="spider">Spider</option>#}
+{#                <option value="goldfish">Goldfish</option>#}
+{#            </select>#}
             {{ form_label(profileForm.site) }}
             {{ form_widget(profileForm.site) }}
             {{ form_errors(profileForm.site) }}
         </div>
 
         <div class="group mb-3 flex justify-between">
-            <button name="save" class="bg-green-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Enregistrer</button>
-            <button name="cancel" class="bg-red-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Annuler</button>
+            <button class="bg-green-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Enregistrer</button>
+            <a href="{{ path('app_home') }}" class="bg-red-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Annuler</a>
         </div>
         {{ form_end(profileForm) }}
     </div>

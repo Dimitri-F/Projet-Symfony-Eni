@@ -16,3 +16,12 @@ import {
 } from "tw-elements";
 
 initTE({ Datepicker, Input });
+
+
+    // Désactiver la validation des champs du formulaire lorsque le bouton "cancel" est cliqué
+    //Dans la vue manageProfile.html.twig
+//     document.querySelector('button[name="cancel"]').addEventListener('click', function () {
+//     Array.from(document.querySelectorAll('.profileForm input, .profileForm select')).forEach(function (element) {
+//         element.removeAttribute('required');
+//     });
+// });
