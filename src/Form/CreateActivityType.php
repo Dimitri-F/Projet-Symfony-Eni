@@ -9,6 +9,7 @@ use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -33,10 +34,6 @@ class CreateActivityType extends AbstractType
             ->add('descriptionInfos',TextareaType::class,[
                 "label" => "Description et infos :"
             ])
-            #->add('etatSortie')
-            #->add('urlPhoto')
-            #->add('organisateur')
-            #->add('inscriptions')
             ->add('site',EntityType::class,[
                 "class" => Site::class,
                 "choice_label" => "nom",
@@ -59,36 +56,28 @@ class CreateActivityType extends AbstractType
                     'class' => 'mt-3 text-center',
                 ],
             ])
-            ->add('rue',EntityType::class,[
-                'class' => Lieu::class,
-                'choice_label' => "rue",
+            ->add('rue',TextType::class,[
                 'label' => 'Rue :',
                 'mapped' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
             ])
-            ->add('codePostal',EntityType::class,[
-                'class' => Ville::class,
-                'choice_label' => "codePostal",
+            ->add('codePostal',TextType::class,[
                 'label' => 'Code Postal :',
                 'mapped' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
             ])
-            ->add('latitude',EntityType::class,[
-                'class' => Lieu::class,
-                'choice_label' => "latitude",
+            ->add('latitude',TextType::class,[
                 'label' => 'Latitude :',
                 'mapped' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
             ])
-            ->add('longitude',EntityType::class,[
-                'class' => Lieu::class,
-                'choice_label' => "longitude",
+            ->add('longitude',TextType::class,[
                 'label' => 'Longitude :',
                 'mapped' => false,
                 'attr' => [
