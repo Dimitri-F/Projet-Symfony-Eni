@@ -4,7 +4,11 @@
 
 {% block body %}
     <h1 class="text-center text-4xl mb-6">Profil de {{ participant.compte.pseudo }}</h1>
-    <div class="profileForm grid grid-cols-2 gap-8">
+    <div class="profileForm flex">
+        <div class="w-full shrink-0 grow-0 basis-auto md:w-2/12 lg:w-3/12">
+            <img src="https://fakeimg.pl/350x200/?">
+        </div>
+        <div class="profileFormTxt">
             {{ form_start(profileForm) }}
             <div class="mb-3 flex justify-between">
                 <label for="pseudo">Pseudo :</label>
@@ -42,11 +46,13 @@
                 {{ form_widget(profileForm.site) }}
                 {{ form_errors(profileForm.site) }}
             </div>
-            <div class="group mb-3 flex justify-between">
-                <button class="bg-green-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Enregistrer</button>
-                <a href="{{ path('app_home') }}" class="bg-red-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Annuler</a>
+            <div class="group mb-3 flex justify-center">
+                <button class="bg-green-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full m-3">Enregistrer</button>
+                <a href="{{ path('app_home') }}" class="bg-red-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full  m-3">Annuler</a>
             </div>
             {{ form_end(profileForm) }}
+        </div>
+
     </div>
 
 {% endblock %}

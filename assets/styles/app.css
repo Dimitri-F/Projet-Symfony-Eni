@@ -3,13 +3,29 @@
 @tailwind utilities;
 
 .alert-success{
+    background-color: darkgreen;
     color: #dbeafe;
     margin: 5vh auto;
+    padding: 5px;
     width: 30vw;
+    border-radius: 10px
 }
 
 .profileForm{
-    width: 50vw;
-    margin-top: 5vh;
-    margin-left: 60vh;
+    width: 70vw;
+    margin: 5vh auto;
 }
+
+.detailsProfileImg{
+    width: 50%;
+}
+
+.detailsProfileTxt{
+    width: 50%;
+}
+
+.profileFormTxt{
+    width: 50%;
+    margin-left: 2vw;
+}
+
