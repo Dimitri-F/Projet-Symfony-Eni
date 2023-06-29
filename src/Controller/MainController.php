@@ -36,27 +36,30 @@ class MainController extends AbstractController
         $heureFrance = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
 
         // Bloc d'inscription à une sortie
-        if($inscrie != null){
+        if ($inscrie !== null) {
             $sortie = $sortieRepository->find($inscrie);
             $participantInscrie = $participantRepository->find($this->getUser()->getId());
-            $inscription = $participantInscrie->getInscriptions()->filter(
-                function(Inscription $inscription) use ($sortie) {
-                    return $inscription->getSorties()->contains($sortie);
-                }
-            )->first();
 
-            if ($sortie && $inscription == null) {
-                // Création de l'inscription si l'utilisateur n'est pas déjà inscrit
-                $participantInscrie = $participantRepository->find($userId);
-                $inscription = new Inscription();
-                $inscription->setDateInscription($heureFrance);
-                $inscription->addSorty($sortie);
-                $inscription->addParticipant($participantInscrie);
-                $entityManager->persist($inscription);
-                $entityManager->flush();
-                $this->addFlash('success', 'Vous êtes bien inscrit à la sortie');
+            if ($sortie && $participantInscrie) {
+                $inscription = $participantInscrie->getInscriptions()->filter(
+                    function (Inscription $inscription) use ($sortie) {
+                        return $inscription->getSorties()->contains($sortie);
+                    }
+                )->first();
+
+                if ($inscription === false) { // Si l'utilisateur n'est pas déjà inscrit à la sortie
+                    // Création de l'inscription
+                    $inscription = new Inscription();
+                    $inscription->setDateInscription($heureFrance);
+                    $inscription->addSorty($sortie);
+                    $inscription->addParticipant($participantInscrie);
+                    $entityManager->persist($inscription);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Vous êtes bien inscrit à la sortie');
+                }
             }
         }
+
 
         // Bloc de désinscription d'une sortie
         if($desister != null){
@@ -139,6 +142,7 @@ class MainController extends AbstractController
             'user' => $user,
             'inscriptions' => $inscriptionsUser,
             'inscriptionsTotals' => $inscriptionsTotals,
+            'dateNow' => $heureFrance,
         ]);
     }
 }

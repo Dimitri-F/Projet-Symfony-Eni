@@ -144,8 +144,10 @@
                 {% endfor %}
             </td>
             <td>
-{#                <a href="{{ path('app_', { 'id': sortie.id }) }}">Afficher</a>#}
-                {% if checkbox and sortie.organisateur != user.id %}
+                {% if sortie.dateDebut|date_modify('+30 days') > dateNow %}
+                <a href="{{ path('app_details', { 'id': sortie.id }) }}">Afficher</a>
+                {% endif %}
+                {% if checkbox and sortie.organisateur != user.id and inscriptionsTotals[sortie.id] != sortie.nbInscriptionsMax and sortie.etatSortie == 2 and sortie.dateDebut >= dateNow %}
                     - <a href="{{ path('app_home', {'inscrie': sortie.id}) }}">S'inscrire</a>
                 {% elseif checkbox == false %}
                     - <a href="{{ path('app_home', {'desister': sortie.id}) }}">Se désister</a>
