@@ -12,7 +12,7 @@
         type="text/javascript"
         src="../node_modules/tw-elements/dist/js/tw-elements.umd.min.js"></script>
 
-<h1 class="text-right">Date du jour : {{ "now"|date("m/d/Y") }}</h1>
+<h1 class="text-right">Date du jour : {{ "now"|date("d/m/Y") }}</h1>
 <h1 class="text-right">Participant : {{ user.prenom }} {{ user.nom }}</h1>
 <h1>Filtrer les sorties</h1>
 <br>
@@ -144,16 +144,16 @@
                 {% endfor %}
             </td>
             <td>
-                <a>Afficher</a>
+{#                <a href="{{ path('app_', { 'id': sortie.id }) }}">Afficher</a>#}
                 {% if checkbox and sortie.organisateur != user.id %}
-                     - <a>S'inscrire</a>
+                    - <a href="{{ path('app_home', {'inscrie': true}) }}">S'inscrire</a>
                 {% elseif checkbox == false %}
-                     - <a>Se désister</a>
+                    - <a href="{{ path('app_home', {'desister': true}) }}">Se désister</a>
                 {% elseif sortie.organisateur == user.id %}
                     {% if sortie.etat.id == 1 %}
-                        - <a>Publier</a>
+{#                        - <a href="{{ path('app_', { 'id': sortie.id }) }}">Publier</a>#}
                     {% else %}
-                        - <a>Annuler</a>
+{#                        - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>#}
                     {% endif %}
                 {% endif %}
             </td>
@@ -164,6 +164,6 @@
 </div>
     <br>
 {#    Boutton#}
-{#    <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>#}
+    <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>
 
 {% endblock %}

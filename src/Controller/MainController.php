@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\FilterHomeType;
+use App\Form\UpdateInscriptionType;
 use App\Repository\EtatRepository;
 use App\Repository\InscriptionRepository;
 use App\Repository\ParticipantRepository;
@@ -22,7 +23,17 @@ class MainController extends AbstractController
     public function home(Request $request, SiteRepository $siteRepository, SortieRepository $sortieRepository,
                          EtatRepository $etatRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository): Response
     {
-        $sites = $siteRepository->findAll();
+        $inscrie = $request->query->get('inscrie');
+        $desister = $request->query->get('desister');
+
+        if($inscrie){
+            dump("coucou");
+        }
+        if($desister){
+            dump("uocuoc");
+        }
+
+
         $sorties = $sortieRepository->findAll();
         $etats = $etatRepository->findAll();
         $participants = $participantRepository->findAll();
@@ -74,6 +85,9 @@ class MainController extends AbstractController
             $isNotInscrit = $data['isNotInscrit'];
             $isPassed = $data['isPassed'];
 
+            if($data['dateEnd'] != null){
+                $data['dateEnd']->setTime(23, 59, 59);
+            }
 
             $sorties = $sortieRepository->findFilteredSorties($data, $isOrganisateur, $isInscrit, $isNotInscrit, $isPassed);
         }
