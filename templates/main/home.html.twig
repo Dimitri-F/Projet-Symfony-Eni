@@ -12,93 +12,96 @@
         type="text/javascript"
         src="../node_modules/tw-elements/dist/js/tw-elements.umd.min.js"></script>
 
-<div class="example-wrapper">
-    <h1>Hello ✅</h1>
-</div>
-
-<h1 class="text-right">Date du jour : xxx</h1>
-<h1 class="text-right">Participant : xxx</h1>
+<h1 class="text-right">Date du jour : {{ "now"|date("m/d/Y") }}</h1>
+<h1 class="text-right">Participant : {{ user.prenom }} {{ user.nom }}</h1>
 <h1>Filtrer les sorties</h1>
 <br>
 
-{#    Coter Droit   #}
-<div style="float:left;width:50%;">
-    {# Select site #}
+    {{ form_start(filterForm) }}
 
-    <div class="flex items-center">
-        <p class=" inset-y-0 flex items-center">Site : </p>
-        <select class="select w-full max-w-xs ml-36">
-            <option disabled selected>sélectionner un site</option>
-            <option>xxx</option>
-            <option>xxx</option>
-            <option>xxx</option>
-        </select>
-    </div>
+    {#    Coter Gauche  #}
 
-    {# Recherche #}
+    <div style="float:left;width:50%;">
 
-    <div class="flex items-center">
-        <p class="inset-y-0 flex items-center">Le nom de la sortie contient : </p>
-        <input type="text" placeholder="recherche" class="input w-full max-w-xs input-bordered ml-5" />
-    </div>
+            {# Select site #}
+            <div class="flex items-center">
+                <p class=" inset-y-0 flex items-center">Site : </p>
+                {{ form_widget(filterForm.site, {'attr': {'class': 'select w-full max-w-xs input-bordered ml-36'}}) }}
+            </div>
 
-    {# Calendrier #}
+            {# Recherche #}
+            <div class="flex items-center mt-2">
+                <p class="inset-y-0 flex items-center">Le nom de la sortie contient : </p>
+                {{ form_widget(filterForm.nomSortie, {'attr': {'class': 'input w-full max-w-xs input-bordered ml-5', 'placeholder': 'recherche'}}) }}
+            </div>
 
-    <div class="flex items-center">
-        <p class="flex-shrink-0">Entre :</p>
-        <div class="relative mb-3 ml-2" data-te-datepicker-init data-te-inline="true" data-te-input-wrapper-init>
-            <input type="text" class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0" placeholder="Select a date" />
-            <label for="floatingInput" class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Select a date</label>
+            {# Calendrier #}
+            <div class="flex items-center mt-2">
+                <p>Entre :</p>
+                <div class=" ml-2">
+                    {{ form_widget(filterForm.dateStart, {'attr': {'class': 'input w-full max-w-xs input-bordered', 'id': 'dateStart'}}) }}
+                </div>
+                <p class="ml-2">et</p>
+                <div class=" ml-2">
+                    {{ form_widget(filterForm.dateEnd, {'attr': {'class': 'input w-full max-w-xs input-bordered', 'id': 'dateEnd'}}) }}
+                </div>
+            </div>
         </div>
-        <p class="flex-shrink-0 ml-2">et</p>
-        <div class="relative mb-3 ml-2" data-te-datepicker-init data-te-inline="true" data-te-input-wrapper-init>
-            <input type="text" class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0" placeholder="Select a date" />
-            <label for="floatingInput" class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Select a date</label>
+
+    <script>
+        document.getElementById("filter_home_dateStart").addEventListener("change", function() {
+            document.getElementById("filter_home_dateEnd").min = this.value;
+        });
+        document.getElementById("filter_home_dateEnd").addEventListener("change", function() {
+            document.getElementById("filter_home_dateStart").max = this.value;
+        });
+    </script>
+
+        {# Coter Droit  #}
+        <div style="float:left;width:30%;">
+            <div class="ml-5">
+                <div class="flex items-center">
+                    <label class="label cursor-pointer">
+                        {{ form_widget(filterForm.isOrganisateur, {'attr': {'class': 'checkbox'}}) }}
+                        <span class="label-text ml-2">Sorties dont je suis l'organisateur/trice</span>
+                    </label>
+                </div>
+                <div class="flex items-center">
+                    <label class="label cursor-pointer">
+                        {{ form_widget(filterForm.isInscrit, {'attr': {'class': 'checkbox'}}) }}
+                        <span class="label-text ml-2">Sortie auxquelles je suis inscrit/e</span>
+                    </label>
+                </div>
+                <div class="flex items-center">
+                    <label class="label cursor-pointer">
+                        {{ form_widget(filterForm.isNotInscrit, {'attr': {'class': 'checkbox'}}) }}
+                        <span class="label-text ml-2">Sorties auxquelles je ne suis pas inscrit/e</span>
+                    </label>
+                </div>
+                <div class="flex items-center">
+                    <label class="label cursor-pointer">
+                        {{ form_widget(filterForm.isPassed, {'attr': {'class': 'checkbox'}}) }}
+                        <span class="label-text ml-2">Sorties passées</span>
+                    </label>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-{#    Coter Gauche    #}
-<div style="float:left;width:30%;">
-    <div class="ml-5">
-        <div class="flex items-center">
-            <label class="label cursor-pointer">
-                <input type="checkbox" class="checkbox" />
-                <span class="label-text ml-2">Sorties dont je suis l'organisateur/trice</span>
-            </label>
+
+        {# boutton de recherche tout a droit #}
+        <div style="float:left;width:20%;">
+            {{ form_widget(filterForm.search, {'attr': {'class': 'btn'}}) }}
         </div>
-        <div class="flex items-center">
-            <label class="label cursor-pointer">
-                <input type="checkbox" class="checkbox" />
-                <span class="label-text ml-2">Sortie auxquelles je suis inscrit/e</span>
-            </label>
-        </div>
-        <div class="flex items-center">
-            <label class="label cursor-pointer">
-                <input type="checkbox" class="checkbox" />
-                <span class="label-text ml-2">Sorties auxquelles je ne suis pas inscrit/e</span>
-            </label>
-        </div>
-        <div class="flex items-center">
-            <label class="label cursor-pointer">
-                <input type="checkbox" class="checkbox" />
-                <span class="label-text ml-2">Sorties passées</span>
-            </label>
-        </div>
-    </div>
-</div>
-{#    boutton de recherche tout a droit#}
-    <div style="float:left;width:20%;">
-        <button class="btn">Recherche</button>
-    </div>
+
+    {{ form_end(filterForm) }}
 
     <div style="clear: both;"></div>
+    <br>
 
 {#    Tableau#}
     <div class="overflow-x-auto h-96">
         <table class="table table-pin-rows table-pin-cols">
         <thead>
         <tr>
-            <th></th>
             <td>Nom de la sortie</td>
             <td>Date de la sortie</td>
             <td>Clôture</td>
@@ -107,136 +110,60 @@
             <td>Inscrit</td>
             <td>Organisateur</td>
             <td>Actions</td>
-            <th></th>
         </tr>
         </thead>
         <tbody>
+        {% for sortie in sorties %}
         <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
+            <td>{{ sortie.nom }}</td>
+            <td>{{ sortie.dateDebut.format('d-m-Y H:i:s') }}</td>
+            <td>{{ sortie.dateCloture.format('d-m-Y') }}</td>
+            <td> {{ inscriptionsTotals[sortie.id] }} / {{ sortie.nbInscriptionsMax }} </td>
+            <td>{% for etat in etats %}
+                    {% if etat.id == sortie.etatSortie %}
+                        {{ etat.libelle }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {% set checkbox = true %}
+                {% for inscription in inscriptions %}
+                    {% if sortie.id == inscription %}
+                        <input type="checkbox" checked="checked" class="checkbox checkbox-xs" disabled />
+                        {% set checkbox = false %}
+                    {% endif %}
+                {% endfor %}
+                {% if checkbox %}
+                    <input type="checkbox" class="checkbox checkbox-xs" disabled />
+                {% endif %}
+            </td>
+            <td>{% for participant in participants %}
+                    {% if participant.id == sortie.organisateur %}
+                        {{ participant.prenom }} {{ participant.nom }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                <a>Afficher</a>
+                {% if checkbox and sortie.organisateur != user.id %}
+                     - <a>S'inscrire</a>
+                {% elseif checkbox == false %}
+                     - <a>Se désister</a>
+                {% elseif sortie.organisateur == user.id %}
+                    {% if sortie.etat.id == 1 %}
+                        - <a>Publier</a>
+                    {% else %}
+                        - <a>Annuler</a>
+                    {% endif %}
+                {% endif %}
+            </td>
         </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-        <tr>
-            <th>xxx</th>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-            <td>xxx</td>
-        </tr>
-
+        {% endfor %}
         </tbody>
     </table>
 </div>
     <br>
 {#    Boutton#}
-    <button class="btn">Créer une sortie</button>
+{#    <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>#}
+
 {% endblock %}

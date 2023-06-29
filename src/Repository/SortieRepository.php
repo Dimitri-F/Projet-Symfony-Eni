@@ -39,6 +39,60 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function findFilteredSorties($data, $isOrganisateur, $isInscrit, $isNotInscrit, $isPassed)
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        if ($data['site']) {
+            $qb->andWhere('s.site = :site')
+                ->setParameter('site', $data['site']);
+        }
+
+        if ($data['nomSortie']) {
+            $qb->andWhere('s.nom LIKE :nomSortie')
+                ->setParameter('nomSortie', '%'.$data['nomSortie'].'%');
+        }
+
+        if ($data['dateStart']) {
+            $qb->andWhere('s.dateDebut >= :dateStart')
+                ->setParameter('dateStart', $data['dateStart']);
+        }
+
+        if ($data['dateEnd']) {
+            $qb->andWhere('s.dateDebut <= :dateEnd')
+                ->setParameter('dateEnd', $data['dateEnd']);
+        }
+
+        if ($isOrganisateur) {
+            $qb->andWhere('s.organisateur = :organisateur')
+                ->setParameter('organisateur', $data['userId']);
+        }
+
+        if ($isInscrit && $isNotInscrit) {
+        } else {
+            if ($isInscrit) {
+                $qb->andWhere('s.id IN (:id)')
+                    ->setParameter('id', $data['inscrit']);
+            }
+
+            if ($isNotInscrit) {
+                $qb->andWhere('s.id NOT IN (:id)')
+                    ->setParameter('id', $data['inscrit']);
+            }
+        }
+
+        if ($isPassed) {
+            $now = new \DateTime(null, new \DateTimeZone('Europe/Paris')); // Ajustez le fuseau horaire à votre localisation
+            $qb->andWhere('s.dateDebut > :now')
+                ->setParameter('now', $now);
+        }
+
+
+        return $qb->getQuery()->getResult();
+    }
+
+
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
