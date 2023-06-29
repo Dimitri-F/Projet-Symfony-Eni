@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Annulation d'une sortie{% endblock %}
+{% block body %}
+    <div class="flex justify-center items-start min-h-screen">
+        <div class="w-full max-w-md mt-8">
+            <h1 class="text-4xl mb-8 text-center">Annuler une sortie</h1>
+            <div>
+                {% if not activity %}
+                    <p>Cette sortie n'existe pas</p>
+                {% else %}
+                    <form method="POST" action="{{ path('app_remove', {'id': activity.id}) }}">
+                        <p>Nom de la sortie : {{ activity.nom }}</p>
+                        <p>Date de la sortie : {{ activity.dateDebut | date('y-m-d')}}</p>
+                        <p>Site organisateur : {{ activity.site.nom }}</p>
+                        <p>Lieu : {{ activity.lieu.nom }} {{ activity.lieu.rue }} {{ activity.lieu.ville.codePostal }} {{ activity.lieu.ville.nom }}</p>
+                        <label for="motif">Motif :</label>
+                        <textarea id="motif" name="motif" class="w-full border"></textarea>
+                        <div class="mt-5 flex justify-center">
+                            <button type="submit" name="save" class="btn btn-success">Enregistrer</button>
+                            <a href="{{ path('app_home') }}" class="btn btn-error ml-3">Annuler</a>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
