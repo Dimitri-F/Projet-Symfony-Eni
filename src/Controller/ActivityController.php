@@ -5,11 +5,9 @@ namespace App\Controller;
 use App\Entity\Sortie;
 use App\Entity\Etat;
 use App\Form\CreateActivityType;
-use App\Form\LieuType;
-use App\Form\VilleType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
-
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -57,4 +55,30 @@ class ActivityController extends AbstractController
             "activityForm" => $activityForm->createView(),
         ]);
     }
+
+    #[Route('remove/{id}','app_remove')]
+    public function remove($id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $activity = $sortieRepository->find($id);
+
+        if ($request->request->has('save')) {
+            try {
+                $etatId = 6;
+                $etat = $entityManager->getReference(Etat::class, $etatId);
+                $activity->setEtat($etat);
+                $activity->setEtatSortie($etatId);
+                $entityManager->persist($activity);
+                $entityManager->flush();
+                $this->addFlash('success', 'La sortie a bien été supprimée');
+                return $this->redirectToRoute('app_home');
+            } catch (Exception $exception) {
+                $this->addFlash('danger', 'Erreur lors de la suppression de la sortie');
+            }
+        }
+
+        return $this->render('activity/remove-activity.html.twig', [
+            "activity" => $activity
+        ]);
+    }
+
 }
