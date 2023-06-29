@@ -39,6 +39,16 @@ class InscriptionRepository extends ServiceEntityRepository
         }
     }
 
+    public function inscrie(inscrieId $inscrieId):void
+    {
+
+    }
+
+    public function desister(sortieId $sortieId, userId $userId):void
+    {
+
+    }
+
 //    /**
 //     * @return Inscription[] Returns an array of Inscription objects
 //     */

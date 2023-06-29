@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+// Importation des classes nécessaires
+use App\Entity\Inscription;
 use App\Entity\Participant;
 use App\Form\FilterHomeType;
 use App\Form\UpdateInscriptionType;
@@ -10,35 +12,79 @@ use App\Repository\InscriptionRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Request;
 
-
+// Classe MainController héritant de AbstractController
 class MainController extends AbstractController
 {
     #[Route('/home', name: 'app_home')]
+    // Cette méthode est utilisée pour le rendu de la page d'accueil
     public function home(Request $request, SiteRepository $siteRepository, SortieRepository $sortieRepository,
-                         EtatRepository $etatRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository): Response
+                         EtatRepository $etatRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository, EntityManagerInterface $entityManager): Response
     {
+        // Récupération des données de requête
         $inscrie = $request->query->get('inscrie');
         $desister = $request->query->get('desister');
+        $userId = $this->getUser()->getId();
 
-        if($inscrie){
-            dump("coucou");
+        // Définition de l'heure en France
+        $heureFrance = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+
+        // Bloc d'inscription à une sortie
+        if($inscrie != null){
+            $sortie = $sortieRepository->find($inscrie);
+            $participantInscrie = $participantRepository->find($this->getUser()->getId());
+            $inscription = $participantInscrie->getInscriptions()->filter(
+                function(Inscription $inscription) use ($sortie) {
+                    return $inscription->getSorties()->contains($sortie);
+                }
+            )->first();
+
+            if ($sortie && $inscription == null) {
+                // Création de l'inscription si l'utilisateur n'est pas déjà inscrit
+                $participantInscrie = $participantRepository->find($userId);
+                $inscription = new Inscription();
+                $inscription->setDateInscription($heureFrance);
+                $inscription->addSorty($sortie);
+                $inscription->addParticipant($participantInscrie);
+                $entityManager->persist($inscription);
+                $entityManager->flush();
+                $this->addFlash('success', 'Vous êtes bien inscrit à la sortie');
+            }
         }
-        if($desister){
-            dump("uocuoc");
+
+        // Bloc de désinscription d'une sortie
+        if($desister != null){
+            $sortie = $sortieRepository->find($desister);
+            $participantDesinscrie = $participantRepository->find($this->getUser()->getId());
+
+            if($sortie && $participantDesinscrie){
+                $inscription = $participantDesinscrie->getInscriptions()->filter(
+                    function(Inscription $inscription) use ($sortie) {
+                        return $inscription->getSorties()->contains($sortie);
+                    }
+                )->first();
+
+                if ($inscription instanceof Inscription) {
+                    // Suppression de l'inscription si elle existe
+                    $entityManager->remove($inscription);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Vous vous êtes bien désisté de la sortie');
+                }
+            }
         }
 
-
+        // Récupération de toutes les sorties, états et participants
         $sorties = $sortieRepository->findAll();
         $etats = $etatRepository->findAll();
         $participants = $participantRepository->findAll();
 
-        $userId = $this->getUser()->getId();
+        // Récupération des données de l'utilisateur
         $userData = $participantRepository->find($userId);
         if($userData){
             $user = [
@@ -48,52 +94,43 @@ class MainController extends AbstractController
             ];
         }
 
-        // quelle sortie participe user
+        // Quelle sortie participe l'utilisateur
         $participant = $participantRepository->find($userId);
         $inscriptions = $participant->getInscriptions();
         $inscriptionsUser = [];
         foreach ($inscriptions as $inscription) {
-            foreach($inscription->getSorties() as $sortie) {
-                $sortieIds = $sortie->getId();
+            $sortie = $inscription->getSorties()->first(); // Récupère la première (et probablement unique) sortie associée à l'inscription
+            if ($sortie !== false) { // Vérifie que la sortie existe
+                $inscriptionsUser[] = $sortie->getId(); // Ajoute l'ID de la sortie au tableau
             }
-            $inscriptionsUser[] = $sortieIds;
         }
 
-
-        // nombre d'inscription total
-        $inscriptionsTotals = []; // tableau pour stocker le nombre de participants pour chaque sortie
-
+        // Nombre d'inscription total
+        $inscriptionsTotals = [];
         foreach ($sorties as $sortie) {
-            $sortieId = $sortie->getId(); // récupère l'id de la sortie
-            $inscriptions = $sortie->getInscriptions(); // récupère toutes les inscriptions pour la sortie
-
-            $inscriptionsTotals[$sortieId] = count($inscriptions); // stocke le nombre total de participants pour la sortie
+            $sortieId = $sortie->getId();
+            $inscriptions = $sortie->getInscriptions();
+            $inscriptionsTotals[$sortieId] = count($inscriptions);
         }
 
-        dump($inscriptionsUser);
-        dump($inscriptions);
-
+        // Création et gestion du formulaire
         $form = $this->createForm(FilterHomeType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Récupération des données filtrées et recherche des sorties correspondantes
             $data = $form->getData();
             $data['userId'] = $userId;
             $data['inscrit'] = $inscriptionsUser;
-            $isOrganisateur = $data['isOrganisateur'];
-            $isInscrit = $data['isInscrit'];
-            $isNotInscrit = $data['isNotInscrit'];
-            $isPassed = $data['isPassed'];
-
             if($data['dateEnd'] != null){
                 $data['dateEnd']->setTime(23, 59, 59);
             }
-
-            $sorties = $sortieRepository->findFilteredSorties($data, $isOrganisateur, $isInscrit, $isNotInscrit, $isPassed);
+            $sorties = $sortieRepository->findFilteredSorties($data, $data['isOrganisateur'], $data['isInscrit'], $data['isNotInscrit'], $data['isPassed']);
         }
 
+        dump($inscriptionsUser);
 
-
+        // Rendu de la vue avec les données nécessaires
         return $this->render('main/home.html.twig', [
             'filterForm' => $form->createView(),
             'sorties' => $sorties,
@@ -104,5 +141,4 @@ class MainController extends AbstractController
             'inscriptionsTotals' => $inscriptionsTotals,
         ]);
     }
-
 }
