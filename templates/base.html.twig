@@ -35,7 +35,13 @@
                 </nav>
             </div>
         </header>
-
+        {%  for label, messages in app.flashes%}
+            {% for message in messages %}
+                <div class="alert-{{ label }} text-center ">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endfor %}
     <main class="mx-40">
         {% block body %}
 

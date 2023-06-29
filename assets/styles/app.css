@@ -2,4 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.alert-success{
+    color: #dbeafe;
+    margin: 5vh auto;
+    width: 30vw;
+}
 
+.profileForm{
+    width: 50vw;
+    margin-top: 5vh;
+    margin-left: 60vh;
+}
