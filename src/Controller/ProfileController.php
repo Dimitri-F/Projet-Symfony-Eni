@@ -12,9 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
+
 
 class ProfileController extends AbstractController
 {
+    private $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
 
     #[Route('/profile/details/{id}',
         name: 'details_profile',
@@ -51,7 +60,8 @@ class ProfileController extends AbstractController
     )]
     public function manageProfile($id, EntityManagerInterface $entityManager,
                                   ParticipantRepository $participantRepository,
-                                  Request $request
+                                  Request $request,
+                                  UserPasswordHasherInterface $userPasswordHasher
     ): Response
     {
         $user = $this->getUser();
@@ -86,9 +96,14 @@ class ProfileController extends AbstractController
             $email = $request->request->get("email");
             $password = $request->request->get("password2");
 
+            // Hacher le mot de passe
+            $hashedPassword =  $this->passwordHasher->hashPassword($user, $password);
+
+            // Définir le mot de passe haché sur le participant
+            $user->setPassword($hashedPassword);
+
             $user->setPseudo($pseudo);
             $user->setEmail($email);
-            $user->setPassword($password);
 
             $entityManager->persist($user);
             $entityManager->persist($participant);
