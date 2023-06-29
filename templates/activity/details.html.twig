@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block title %}Détail de la sortie{% endblock %}
+{% block body %}
+    <div class="mx-4">
+        {% if not activity %}
+            <p>Cette sortie n'existe pas</p>
+        {% else %}
+            <div class="mx-auto">
+                <div class="detailsActivity bg-blue-500 text-primary-content rounded p-5">
+                    <h1 class="text-4xl mb-8 text-center">Détail de la sortie</h1>
+                    <div class="flex justify-center mt-8">
+                        <div>
+                            <p class="mt-3">Nom de la sortie : {{ activity.nom }}</p>
+                            <p class="mt-3">Date et heure de la sortie : {{ activity.dateDebut | date('d-m-y h-m') }}</p>
+                            <p class="mt-3">Date limite d'inscription : {{ activity.dateCloture  | date('d-m-y h-m') }}</p>
+                            <p class="mt-3">Durée {{ activity.duree }} minutes</p>
+                            <p class="mt-3">Nombre de places : {{ activity.nbInscriptionsMax }}</p>
+                            <p class="mt-3">Description et infos : {{ activity.descriptionInfos }}</p>
+                        </div>
+                        <div class="ml-8">
+                            <p class="mt-3">Lieu : {{ activity.lieu.nom }}</p>
+                            <p class="mt-3">Rue : {{ activity.lieu.rue }}</p>
+                            <p class="mt-3">Ville : {{ activity.lieu.ville.nom }}</p>
+                            <p class="mt-3">CodePostal : {{ activity.lieu.ville.codePostal }}</p>
+                            <p class="mt-3">Latitude : {{ activity.lieu.latitude }}</p>
+                            <p class="mt-3">Longitude : {{ activity.lieu.longitude }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <h2 class="text-2xl mt-3">Liste des participants inscrits :</h2>
+                <table class="border border-collapse min-w-max">
+                    <thead>
+                    <tr>
+                        <th class="border p-2">Pseudo</th>
+                        <th class="border p-2">Nom</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for participant in participants %}
+                        <tr class="border">
+                            <td class="border p-2">
+                                <p>{{ participant.compte.pseudo }}</p>
+                            </td>
+                            <td class="border p-2">
+                                <p>{{ participant.prenom }} {{ participant.nom }}</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

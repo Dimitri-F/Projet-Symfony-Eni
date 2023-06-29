@@ -39,6 +39,18 @@ class ParticipantRepository extends ServiceEntityRepository
         }
     }
 
+    public function findParticipantsInscrits($sortieId)
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.inscriptions', 'i')
+            ->join('i.sorties', 's')
+            ->where('s.id = :sortieId')
+            ->setParameter('sortieId', $sortieId)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 //    /**
 //     * @return Participant[] Returns an array of Participant objects
 //     */
