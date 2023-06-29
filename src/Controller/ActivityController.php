@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ActivityController extends AbstractController
 {
+
     #[Route('/create', name: 'app_create')]
     public function index(EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository, SiteRepository $siteRepository): Response
     {
@@ -77,8 +78,19 @@ class ActivityController extends AbstractController
         }
 
         return $this->render('activity/remove-activity.html.twig', [
-            "activity" => $activity
+            "activity" => $activity,
+
         ]);
     }
+    #[Route('/details/{id}','app_details')]
+    public function details($id,SortieRepository $sortieRepository,ParticipantRepository $participantRepository): Response
+    {
+        $activity = $sortieRepository->find($id);
+        $participantsInscrits = $participantRepository->findParticipantsInscrits($id);
 
+        return $this->render('activity/details.html.twig',[
+            "activity" => $activity,
+            "participants" => $participantsInscrits,
+        ]);
+    }
 }
