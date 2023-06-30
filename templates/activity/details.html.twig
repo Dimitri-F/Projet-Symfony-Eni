@@ -44,13 +44,11 @@
                                 <p>{{ participant.compte.pseudo }}</p>
                             </td>
                             <td class="border p-2">
-                                <p>{{ participant.prenom }} {{ participant.nom }}</p>
+                                <a href="{{ path('details_profile', { 'id': participant.id }) }}">{{ participant.prenom }} {{ participant.nom }}</a>
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
-            </div>
-        {% endif %}
-    </div>
+        {% endif%}
 {% endblock %}
