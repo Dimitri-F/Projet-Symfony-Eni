@@ -137,16 +137,6 @@ class MainController extends AbstractController
         }
 
 
-        // Récupération des données de l'utilisateur
-        $userData = $participantRepository->find($userId);
-        if($userData){
-            $user = [
-                'id' => $userId,
-                'nom' => $userData->getNom(),
-                'prenom' => $userData->getPrenom(),
-            ];
-        }
-
 
         // Quelle sortie participe l'utilisateur
         $participant = $participantRepository->find($userId);
@@ -158,6 +148,21 @@ class MainController extends AbstractController
                     $inscriptionsUser[] = $sortie->getId(); // Ajoute l'ID de la sortie au tableau
                 }
             }
+            // Récupération des données de l'utilisateur
+            $userData = $participantRepository->find($userId);
+            if($userData){
+                $user = [
+                    'id' => $userId,
+                    'nom' => $userData->getNom(),
+                    'prenom' => $userData->getPrenom(),
+                ];
+            }
+        }else{
+            $user = [
+                'id' => 0,
+                'nom' => "NULE",
+                'prenom' => "BITCH",
+            ];
         }
 
 
