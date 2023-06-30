@@ -65,9 +65,14 @@ class MainController extends AbstractController
                     $inscription->addParticipant($participantInscrie);
                     $entityManager->persist($inscription);
                     $entityManager->flush();
+                    $entityManager->refresh($sortie);
                     $test = $inscription->getSorties()->first();
                     if ($test !== false) { // Vérifie que la sortie existe
                         $inscriptionsUser[] = $test->getId(); // Ajoute l'ID de la sortie au tableau
+//                        if (!isset($inscriptionsTotals[$test->getId()])) {
+//                            $inscriptionsTotals[$test->getId()] = 0;
+//                        }
+//                        $inscriptionsTotals[$test->getId()] += 1;
                     }
                     $this->addFlash('success', 'Vous êtes bien inscrit à la sortie');
                 }
@@ -170,7 +175,11 @@ class MainController extends AbstractController
         foreach ($sorties as $sortie) {
             $sortieId = $sortie->getId();
             $inscriptions = $sortie->getInscriptions();
-            $inscriptionsTotals[$sortieId] = count($inscriptions);
+//            if (!isset($inscriptionsTotals[$sortieId])){
+                $inscriptionsTotals[$sortieId] = count($inscriptions);
+//            }else{
+//                $inscriptionsTotals[$sortieId] = $inscriptionsTotals[$sortieId] + count($inscriptions);
+//            }
         }
 
         // Création et gestion du formulaire

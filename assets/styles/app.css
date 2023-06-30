@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.alert-success{
-    background-color: darkgreen;
-    color: #dbeafe;
-    margin: 5vh auto;
-    padding: 5px;
-    width: 30vw;
-    border-radius: 10px
-}
 
 .profileForm{
     width: 70vw;
@@ -35,11 +27,3 @@
     color: white;
 }
 
-.alert-error{
-    background-color: #B04150;
-    color: #FFFFFF;
-    margin: 5vh auto;
-    padding: 5px;
-    width: 30vw;
-    border-radius: 10px
-}
