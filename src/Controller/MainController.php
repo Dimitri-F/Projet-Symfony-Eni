@@ -32,8 +32,17 @@ class MainController extends AbstractController
         $desister = $request->query->get('desister');
         $userId = $this->getUser()->getId();
 
+        // tableau id de sortie si user est inscrit
+        $inscriptionsUser = [];
+
         // Définition de l'heure en France
         $heureFrance = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+
+        $heureFrance = \DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            $heureFrance->format('Y-m-d H:i:s'),
+            new \DateTimeZone('UTC')
+        );
 
         // Bloc d'inscription à une sortie
         if ($inscrie !== null) {
@@ -47,7 +56,7 @@ class MainController extends AbstractController
                     }
                 )->first();
 
-                if ($inscription === false) { // Si l'utilisateur n'est pas déjà inscrit à la sortie
+                if ($inscription === false && count($sortie->getInscriptions()) < $sortie->getNbInscriptionsMax()) { // Si l'utilisateur n'est pas déjà inscrit à la sortie et que la limite n'est pas atteinte
                     // Création de l'inscription
                     $inscription = new Inscription();
                     $inscription->setDateInscription($heureFrance);
@@ -55,6 +64,10 @@ class MainController extends AbstractController
                     $inscription->addParticipant($participantInscrie);
                     $entityManager->persist($inscription);
                     $entityManager->flush();
+                    $test = $inscription->getSorties()->first();
+                    if ($test !== false) { // Vérifie que la sortie existe
+                        $inscriptionsUser[] = $test->getId(); // Ajoute l'ID de la sortie au tableau
+                    }
                     $this->addFlash('success', 'Vous êtes bien inscrit à la sortie');
                 }
             }
@@ -82,10 +95,46 @@ class MainController extends AbstractController
             }
         }
 
+
         // Récupération de toutes les sorties, états et participants
         $sorties = $sortieRepository->findAll();
         $etats = $etatRepository->findAll();
         $participants = $participantRepository->findAll();
+
+
+        //Vérification des Etats
+        foreach ($sorties as $sortie){
+            $dateDebut = clone $sortie->getDateDebut();
+            $dateDebutAddTime = clone $sortie->getDateDebut();
+
+            $dateDebutAddTime->add(new \DateInterval('PT'.$sortie->getDuree().'S'));
+
+            $dateCloture = clone $sortie->getDateCloture();
+            $dateCloture->setTime(0, 0, 0);
+
+            $heureFranceSansHeure = clone $heureFrance;
+            $heureFranceSansHeure->setTime(0, 0, 0);
+
+
+            if ($dateCloture <= $heureFranceSansHeure){
+                $sortie->setEtat($etatRepository->find(3));
+                $entityManager->persist($sortie);
+            }
+            if ($dateDebut <= $heureFrance && $dateDebutAddTime >= $heureFrance){
+                $sortie->setEtat($etatRepository->find(4));
+                $entityManager->persist($sortie);
+            }
+            if ($dateDebutAddTime < $heureFrance){
+                $sortie->setEtat($etatRepository->find(5));
+                $entityManager->persist($sortie);
+            }
+        }
+        //envois bdd si new etat
+        if ($entityManager){
+            $entityManager->flush();
+            $etats = $etatRepository->findAll();
+        }
+
 
         // Récupération des données de l'utilisateur
         $userData = $participantRepository->find($userId);
@@ -97,16 +146,17 @@ class MainController extends AbstractController
             ];
         }
 
+
         // Quelle sortie participe l'utilisateur
         $participant = $participantRepository->find($userId);
         $inscriptions = $participant->getInscriptions();
-        $inscriptionsUser = [];
         foreach ($inscriptions as $inscription) {
-            $sortie = $inscription->getSorties()->first(); // Récupère la première (et probablement unique) sortie associée à l'inscription
+            $sortie = $inscription->getSorties()->first(); // Récupère la première sortie associée à l'inscription
             if ($sortie !== false) { // Vérifie que la sortie existe
                 $inscriptionsUser[] = $sortie->getId(); // Ajoute l'ID de la sortie au tableau
             }
         }
+
 
         // Nombre d'inscription total
         $inscriptionsTotals = [];
@@ -115,6 +165,7 @@ class MainController extends AbstractController
             $inscriptions = $sortie->getInscriptions();
             $inscriptionsTotals[$sortieId] = count($inscriptions);
         }
+
 
         // Création et gestion du formulaire
         $form = $this->createForm(FilterHomeType::class);
@@ -131,7 +182,6 @@ class MainController extends AbstractController
             $sorties = $sortieRepository->findFilteredSorties($data, $data['isOrganisateur'], $data['isInscrit'], $data['isNotInscrit'], $data['isPassed']);
         }
 
-        dump($inscriptionsUser);
 
         // Rendu de la vue avec les données nécessaires
         return $this->render('main/home.html.twig', [

@@ -120,7 +120,7 @@
             <td>{{ sortie.dateCloture.format('d-m-Y') }}</td>
             <td> {{ inscriptionsTotals[sortie.id] }} / {{ sortie.nbInscriptionsMax }} </td>
             <td>{% for etat in etats %}
-                    {% if etat.id == sortie.etatSortie %}
+                    {% if etat.id == sortie.etat.id %}
                         {{ etat.libelle }}
                     {% endif %}
                 {% endfor %}
@@ -147,14 +147,14 @@
                 {% if sortie.dateDebut|date_modify('+30 days') > dateNow %}
                 <a href="{{ path('app_details', { 'id': sortie.id }) }}">Afficher</a>
                 {% endif %}
-                {% if checkbox and sortie.organisateur != user.id and inscriptionsTotals[sortie.id] != sortie.nbInscriptionsMax and sortie.etatSortie == 2 and sortie.dateDebut >= dateNow %}
+                {% if checkbox and sortie.organisateur != user.id and inscriptionsTotals[sortie.id] != sortie.nbInscriptionsMax and sortie.etat.id == 2 %}
                     - <a href="{{ path('app_home', {'inscrie': sortie.id}) }}">S'inscrire</a>
-                {% elseif checkbox == false %}
+                {% elseif checkbox == false and sortie.etat.id == 2 %}
                     - <a href="{{ path('app_home', {'desister': sortie.id}) }}">Se désister</a>
                 {% elseif sortie.organisateur == user.id %}
                     {% if sortie.etat.id == 1 %}
 {#                        - <a href="{{ path('app_', { 'id': sortie.id }) }}">Publier</a>#}
-                    {% else %}
+                    {% elseif sortie.dateCloture > dateNow %}
                         - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>
                     {% endif %}
                 {% endif %}

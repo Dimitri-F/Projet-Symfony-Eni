@@ -34,8 +34,8 @@ class Sortie
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $descriptionInfos = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $etatSortie = null;
+//    #[ORM\Column(nullable: true)]
+//    private ?int $etatSortie = null;
 
     #[ORM\Column(length: 250, nullable: true)]
     private ?string $urlPhoto = null;
@@ -140,17 +140,17 @@ class Sortie
         return $this;
     }
 
-    public function getEtatSortie(): ?int
-    {
-        return $this->etatSortie;
-    }
-
-    public function setEtatSortie(int $etatSortie): static
-    {
-        $this->etatSortie = $etatSortie;
-
-        return $this;
-    }
+//    public function getEtatSortie(): ?int
+//    {
+//        return $this->etatSortie;
+//    }
+//
+//    public function setEtatSortie(int $etatSortie): static
+//    {
+//        $this->etatSortie = $etatSortie;
+//
+//        return $this;
+//    }
 
     public function getUrlPhoto(): ?string
     {
