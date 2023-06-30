@@ -84,7 +84,7 @@ class SortieRepository extends ServiceEntityRepository
 
         if ($isPassed) {
             $now = new \DateTime(null, new \DateTimeZone('Europe/Paris')); // Ajustez le fuseau horaire à votre localisation
-            $qb->andWhere('s.dateDebut > :now')
+            $qb->andWhere('s.dateDebut < :now')
                 ->setParameter('now', $now);
         }
 
