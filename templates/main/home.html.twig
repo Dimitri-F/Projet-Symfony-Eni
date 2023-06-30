@@ -19,7 +19,7 @@
 
     {{ form_start(filterForm) }}
 
-    {#    Coter Gauche  #}
+    {#    Côté Gauche  #}
 
     <div style="float:left;width:50%;">
 
@@ -57,7 +57,7 @@
         });
     </script>
 
-        {# Coter Droit  #}
+        {# Côté Droit  #}
         <div style="float:left;width:30%;">
             <div class="ml-5">
                 <div class="flex items-center">
@@ -87,7 +87,7 @@
             </div>
         </div>
 
-        {# boutton de recherche tout a droit #}
+        {# bouton de recherche tout a droite #}
         <div style="float:left;width:20%;">
             {{ form_widget(filterForm.search, {'attr': {'class': 'btn'}}) }}
         </div>
@@ -97,7 +97,7 @@
     <div style="clear: both;"></div>
     <br>
 
-{#    Tableau#}
+{#  Tableau #}
     <div class="overflow-x-auto h-96">
         <table class="table table-pin-rows table-pin-cols">
         <thead>
@@ -165,7 +165,7 @@
     </table>
 </div>
     <br>
-{#    Boutton#}
+{#    Bouton#}
     <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>
 
 {% endblock %}
