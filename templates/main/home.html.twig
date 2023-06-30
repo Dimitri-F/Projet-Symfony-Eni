@@ -139,7 +139,7 @@
             </td>
             <td>{% for participant in participants %}
                     {% if participant.id == sortie.organisateur %}
-                        {{ participant.prenom }} {{ participant.nom }}
+                        <a href="{{ path('details_profile', { 'id': participant.id }) }}">{{ participant.prenom }} {{ participant.nom }}</a>
                     {% endif %}
                 {% endfor %}
             </td>
