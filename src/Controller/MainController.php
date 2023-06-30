@@ -13,6 +13,7 @@ use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -148,14 +149,20 @@ class MainController extends AbstractController
 
 
         // Quelle sortie participe l'utilisateur
-        $participant = $participantRepository->find($userId);
-        $inscriptions = $participant->getInscriptions();
-        foreach ($inscriptions as $inscription) {
-            $sortie = $inscription->getSorties()->first(); // Récupère la première sortie associée à l'inscription
-            if ($sortie !== false) { // Vérifie que la sortie existe
-                $inscriptionsUser[] = $sortie->getId(); // Ajoute l'ID de la sortie au tableau
+        try {
+            $participant = $participantRepository->find($userId);
+            $inscriptions = $participant->getInscriptions();
+            foreach ($inscriptions as $inscription) {
+                $sortie = $inscription->getSorties()->first(); // Récupère la première sortie associée à l'inscription
+                if ($sortie !== false) { // Vérifie que la sortie existe
+                    $inscriptionsUser[] = $sortie->getId(); // Ajoute l'ID de la sortie au tableau
+                }
             }
+        } catch (Exception $e) {
+
         }
+
+
 
 
         // Nombre d'inscription total
