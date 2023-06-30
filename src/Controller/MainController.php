@@ -102,9 +102,9 @@ class MainController extends AbstractController
         $inscriptions = $participant->getInscriptions();
         $inscriptionsUser = [];
         foreach ($inscriptions as $inscription) {
-            $sortie = $inscription->getSorties()->first(); // Récupère la première (et probablement unique) sortie associée à l'inscription
-            if ($sortie !== false) { // Vérifie que la sortie existe
-                $inscriptionsUser[] = $sortie->getId(); // Ajoute l'ID de la sortie au tableau
+            $sortieVerifUser = $inscription->getSorties()->first(); // Récupère la première (et probablement unique) sortie associée à l'inscription
+            if ($sortieVerifUser !== false) { // Vérifie que la sortie existe
+                $inscriptionsUser[] = $sortieVerifUser->getId(); // Ajoute l'ID de la sortie au tableau
             }
         }
 
