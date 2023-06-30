@@ -149,8 +149,8 @@ class MainController extends AbstractController
 
 
         // Quelle sortie participe l'utilisateur
-        try {
-            $participant = $participantRepository->find($userId);
+        $participant = $participantRepository->find($userId);
+        if ($participant !== null) {
             $inscriptions = $participant->getInscriptions();
             foreach ($inscriptions as $inscription) {
                 $sortie = $inscription->getSorties()->first(); // Récupère la première sortie associée à l'inscription
@@ -158,11 +158,7 @@ class MainController extends AbstractController
                     $inscriptionsUser[] = $sortie->getId(); // Ajoute l'ID de la sortie au tableau
                 }
             }
-        } catch (Exception $e) {
-
         }
-
-
 
 
         // Nombre d'inscription total
