@@ -1,23 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Enregistrer un utilisateur{% endblock %}
 
 {% block body %}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1 class="text-center text-4xl mb-6">Enregistrer un utilisateur</h1>
+    <div class="w-1/5 mx-auto">
+        {{ form_errors(registrationForm) }}
+        {{ form_start(registrationForm) }}
+        <div class="mb-3 flex justify-between">
+            {{ form_label(registrationForm.pseudo) }}
+            {{ form_widget(registrationForm.pseudo) }}
+            {{ form_errors(registrationForm.pseudo) }}
+        </div>
+        <div class="mb-3 flex justify-between">
+            {{ form_label(registrationForm.email) }}
+            {{ form_widget(registrationForm.email) }}
+            {{ form_errors(registrationForm.email) }}
+        </div>
+        <div class="mb-3 flex justify-between">
+            {{ form_label(registrationForm.plainPassword) }}
+            {{ form_widget(registrationForm.plainPassword) }}
+            {{ form_errors(registrationForm.plainPassword) }}
+        </div>
+        <div class="mb-3 flex justify-between">
+            <label for="lastName">Nom :</label>
+            <input id="lastName" name="lastName" type="text">
+        </div>
+        <div class="mb-3 flex justify-between">
+            <label for="firstName">Prénom :</label>
+            <input id="firstName" name="firstName" type="text">
+        </div>
+        <div class="mb-3 flex justify-between">
+            <label for="tel">Téléphone :</label>
+            <input id="tel" name="tel" type="text">
+        </div>
+        <div class="mb-3 flex justify-between">
+            <label for="site-select">Site :</label>
+            <select name="site" id="site-select">
+                <option value="1">Nantes</option>
+                <option value="2">Rennes</option>
+                <option value="3">Quimper</option>
+                <option value="4">Niort</option>
+                <option value="5">Paris</option>
+            </select>
+        </div>
+        <div class="mb-3 flex justify-evenly">
+            {{ form_label(registrationForm.agreeTerms) }}
+            {{ form_widget(registrationForm.agreeTerms) }}
+            {{ form_errors(registrationForm.agreeTerms) }}
+        </div>
+        <div class="mb-3 flex justify-center">
+            <button type="submit" class="btn">Valider</button>
+        </div>
 
-    {{ form_errors(registrationForm) }}
+        {{ form_end(registrationForm) }}
+    </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
 {% endblock %}

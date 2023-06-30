@@ -165,7 +165,6 @@ class MainController extends AbstractController
             ];
         }
 
-
         // Nombre d'inscription total
         $inscriptionsTotals = [];
         foreach ($sorties as $sortie) {
@@ -173,7 +172,6 @@ class MainController extends AbstractController
             $inscriptions = $sortie->getInscriptions();
             $inscriptionsTotals[$sortieId] = count($inscriptions);
         }
-
 
         // Création et gestion du formulaire
         $form = $this->createForm(FilterHomeType::class);

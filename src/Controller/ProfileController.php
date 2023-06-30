@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ProfileManagerType;
 use App\Repository\ParticipantRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ class ProfileController extends AbstractController
         name: 'details_profile',
         requirements: ["id" => "\d+"]
     )]
-    public function profileDetails($id, ParticipantRepository $participantRepository): Response
+    public function profileDetails($id, ParticipantRepository $participantRepository, ): Response
     {
         $participant = $participantRepository->find($id);
 
@@ -42,13 +43,14 @@ class ProfileController extends AbstractController
         name: 'manage_profile',
         requirements: ["id" => "\d+"]
     )]
-    public function manageProfile($id, EntityManagerInterface $entityManager,
-                                  ParticipantRepository $participantRepository,
-                                  Request $request,
-    ): Response
+    public function manageProfile($id, EntityManagerInterface $entityManager, ParticipantRepository $participantRepository, UserRepository $userRepository, Request $request): Response
     {
         $user = $this->getUser();
         $userId = $user->getId();
+        // Récupère la liste des utilisateurs existants
+        $pseudoList = array_map(function($user) {
+            return $user->getPseudo();
+        }, $userRepository->findAll());
 
         // Vérifie si l'utilisateur a un rôle d'administrateur
         $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
@@ -66,8 +68,8 @@ class ProfileController extends AbstractController
         }
 
         if ($participant->getSite() !== null) {
-            $userSite = $participant->getSite()->getNom();
-            $participant->getSite()->setNom($userSite);
+            $participantSite = $participant->getSite()->getNom();
+            $participant->getSite()->setNom($participantSite);
         }
 
         $profileForm = $this->createForm(ProfileManagerType::class, $participant);
@@ -79,22 +81,27 @@ class ProfileController extends AbstractController
             $email = $request->request->get("email");
             $password = $request->request->get("password2");
 
-            // Hacher le mot de passe
-            $hashedPassword =  $this->passwordHasher->hashPassword($user, $password);
+            // Vérifie si le pseudo existe déjà
+            if (!in_array($pseudo, $pseudoList)) {
+                // Hacher le mot de passe
+                $hashedPassword =  $this->passwordHasher->hashPassword($user, $password);
 
-            // Définir le mot de passe haché sur le participant
-            $user->setPassword($hashedPassword);
+                // Définir le mot de passe haché sur le participant
+                $user->setPseudo($pseudo);
+                $user->setPassword($hashedPassword);
 
-            $user->setPseudo($pseudo);
-            $user->setEmail($email);
+                $user->setEmail($email);
 
-            $entityManager->persist($user);
-            $entityManager->persist($participant);
-            $entityManager->flush();
+                $entityManager->persist($user);
+                $entityManager->persist($participant);
+                $entityManager->flush();
 
-            $this->addFlash('success', 'Profil modifié avec succès!');
+                $this->addFlash('success', 'Profil modifié avec succès!');
 
-            return $this->redirectToRoute('details_profile', ['id'=>$participant->getId()]);
+                return $this->redirectToRoute('details_profile', ['id'=>$participant->getId()]);
+            } else {
+                $this->addFlash('error', 'Le pseudo existe déjà. Veuillez en choisir un autre.');
+            }
         }
 
         return $this->render('profile/manageProfile.html.twig', [
@@ -102,5 +109,4 @@ class ProfileController extends AbstractController
             "participant" => $participant,
         ]);
     }
-
 }

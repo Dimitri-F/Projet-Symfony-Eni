@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\SiteRepository;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -26,11 +29,18 @@ class RegistrationController extends AbstractController
     {
         $this->emailVerifier = $emailVerifier;
     }
-
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request,
+                             UserPasswordHasherInterface $userPasswordHasher,
+                             UserAuthenticatorInterface $userAuthenticator,
+                             AppAuthenticator $authenticator,
+                             EntityManagerInterface $entityManager,
+                            SiteRepository $siteRepository
+    ): Response
     {
         $user = new User();
+        $participant = new Participant();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -42,8 +52,23 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setRoles(["ROLE_USER"]);
+            $user->setIsVerified(1);
+
+            $lastName = $request->request->get("lastName");
+            $firstName = $request->request->get("firstName");
+            $tel = $request->request->get("telephone");
+            $siteParticipantId = $request->request->get("site");
+
+            $participant->setNom($lastName);
+            $participant->setPrenom($firstName);
+            $participant->setTelephone($tel);
+            $participant->setSite($siteRepository->find($siteParticipantId));
+            $participant->setActif(true);
+            $participant->setCompte($user);
 
             $entityManager->persist($user);
+            $entityManager->persist($participant);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
