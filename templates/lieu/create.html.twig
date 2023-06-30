@@ -3,35 +3,35 @@
 {% block body %}
     <h1 class="text-4xl mb-8 text-center">Création d'un lieu</h1>
     {{ form_start(lieuForm) }}
-    <div class="text-center">
-        <div class="mt-3">
+    <div class="w-1/5 mx-auto">
+        <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.ville) }}
             {{ form_widget(lieuForm.ville) }}
             {{ form_errors(lieuForm.ville) }}
         </div>
-        <div class="mt-3">
+        <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.nom) }}
             {{ form_widget(lieuForm.nom) }}
             {{ form_errors(lieuForm.nom) }}
         </div>
-        <div class="mt-3">
+        <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.rue) }}
             {{ form_widget(lieuForm.rue) }}
             {{ form_errors(lieuForm.rue) }}
         </div>
-        <div class="mt-3">
+        <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.latitude) }}
             {{ form_widget(lieuForm.latitude) }}
             {{ form_errors(lieuForm.latitude) }}
         </div>
-        <div class="mt-3">
+        <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.longitude) }}
             {{ form_widget(lieuForm.longitude) }}
             {{ form_errors(lieuForm.longitude) }}
         </div>
     </div>
     <div class="flex justify-center mt-8">
-        <button type="submit" class="btn btn-success">Enregistrer</button>
+        <button type="submit" class="btn btn-success mx-3">Enregistrer</button>
         <a href="{{ path('app_create') }}" class="btn btn-error">Retour</a>
     </div>
     {{ form_end(lieuForm) }}
