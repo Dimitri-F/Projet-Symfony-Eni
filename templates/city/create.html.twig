@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter une ville{% endblock %}
+{% block body %}
+    <h1 class="text-4xl mb-8 text-center">Ajout d'une ville</h1>
+    <div class="w-1/5 mx-auto mt-8">
+    {{ form_start(cityForm) }}
+        <div>
+            <div class="flex justify-between mt-2">
+                {{ form_label(cityForm.nom) }}
+                {{ form_widget(cityForm.nom) }}
+            </div>
+            {{ form_errors(cityForm.nom) }}
+        </div>
+        <div>
+            <div class="flex justify-between mt-2">
+                {{ form_label(cityForm.codePostal) }}
+                {{ form_widget(cityForm.codePostal) }}
+            </div>
+            {{ form_errors(cityForm.codePostal) }}
+        </div>
+    <div class="mt-6 flex justify-center">
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+    </div>
+    {{ form_end(cityForm) }}
+    </div>
+{% endblock %}
