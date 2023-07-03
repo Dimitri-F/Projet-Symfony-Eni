@@ -129,7 +129,7 @@
                 {% set checkbox = true %}
                 {% for inscription in inscriptions %}
                     {% if sortie.id == inscription %}
-                        <input type="checkbox" checked="checked" class="checkbox checkbox-xs checkbox-success" disabled />
+                        <input type="checkbox" checked="checked" class="checkbox checkbox-xs" disabled />
                         {% set checkbox = false %}
                     {% endif %}
                 {% endfor %}

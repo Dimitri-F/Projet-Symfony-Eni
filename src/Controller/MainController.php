@@ -50,7 +50,7 @@ class MainController extends AbstractController
             $sortie = $sortieRepository->find($inscrie);
             $participantInscrie = $participantRepository->find($this->getUser()->getId());
 
-            if ($sortie && $participantInscrie) {
+            if ($sortie && $participantInscrie && $sortie->getDateCloture() > $heureFrance) {
                 $inscription = $participantInscrie->getInscriptions()->filter(
                     function (Inscription $inscription) use ($sortie) {
                         return $inscription->getSorties()->contains($sortie);
@@ -85,7 +85,7 @@ class MainController extends AbstractController
             $sortie = $sortieRepository->find($desister);
             $participantDesinscrie = $participantRepository->find($this->getUser()->getId());
 
-            if($sortie && $participantDesinscrie){
+            if($sortie && $participantDesinscrie && $sortie->getDateCloture() > $heureFrance){
                 $inscription = $participantDesinscrie->getInscriptions()->filter(
                     function(Inscription $inscription) use ($sortie) {
                         return $inscription->getSorties()->contains($sortie);
