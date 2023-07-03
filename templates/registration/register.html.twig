@@ -28,19 +28,19 @@
         </div>
         <div class="mb-3 flex justify-between">
             <label for="lastName">Nom :</label>
-            <input id="lastName" name="lastName" type="text">
+            <input class="registrationForm" id="lastName" name="lastName" type="text">
         </div>
         <div class="mb-3 flex justify-between">
             <label for="firstName">Prénom :</label>
-            <input id="firstName" name="firstName" type="text">
+            <input class="registrationForm" id="firstName" name="firstName" type="text">
         </div>
         <div class="mb-3 flex justify-between">
             <label for="tel">Téléphone :</label>
-            <input id="tel" name="tel" type="text">
+            <input class="registrationForm" id="tel" name="tel" type="text">
         </div>
         <div class="mb-3 flex justify-between">
             <label for="site-select">Site :</label>
-            <select name="site" id="site-select">
+            <select class="registrationForm" name="site" id="site-select">
                 <option value="1">Nantes</option>
                 <option value="2">Rennes</option>
                 <option value="3">Quimper</option>
@@ -56,8 +56,33 @@
         <div class="mb-3 flex justify-center">
             <button type="submit" class="btn">Valider</button>
         </div>
-
         {{ form_end(registrationForm) }}
+    </div>
+
+        {# affichage msg d'erreur #}
+{#        {% if app.flashes('error') is not empty %}#}
+{#            {% for messages in app.flashes('error') %}#}
+{#                <div class="alert alert-danger w-2/5 mx-auto flex justify-center items-center">#}
+{#                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">#}
+{#                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />#}
+{#                    </svg>#}
+{#                    <span>{{ messages }}</span>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        {% endif %}#}
+    </div>
+    <div class="mt-3">
+        {{ form_start(registrationCSV) }}
+        <div class="w-1/5 mx-auto my-16">
+            <div class="mb-3 flex flex-col text-center">
+                <label for="fileInput" class="form-label text-2xl">Ou choisir un fichier CSV</label>
+                <input type="file" class="form-control" id="fileInput" name="csvFile">
+            </div>
+            <div class="mb-3 flex justify-center">
+                <button type="submit" class="btn">Valider</button>
+            </div>
+        </div>
+        {{ form_end(registrationCSV) }}
     </div>
 
 {% endblock %}

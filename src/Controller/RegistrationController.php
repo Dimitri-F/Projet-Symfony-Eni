@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Entity\User;
+use App\Form\RegistrationCSVType;
 use App\Form\RegistrationFormType;
 use App\Repository\SiteRepository;
 use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
+use App\Service\CsvImporterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -36,7 +39,8 @@ class RegistrationController extends AbstractController
                              UserAuthenticatorInterface $userAuthenticator,
                              AppAuthenticator $authenticator,
                              EntityManagerInterface $entityManager,
-                            SiteRepository $siteRepository
+                            SiteRepository $siteRepository,
+                            CsvImporterService $csvImporterService
     ): Response
     {
         $user = new User();
@@ -44,6 +48,10 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        $formCSV = $this->createForm(RegistrationCSVType::class);
+        $formCSV->handleRequest($request);
+
+        //enregistrement d'un utilisateur par soumission et validation du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -88,8 +96,22 @@ class RegistrationController extends AbstractController
             );
         }
 
+        //enregistrement d'un utilisateur par soumission et validation du formulaire
+        if ($formCSV->isSubmitted() && $formCSV->isValid()) {
+            dump("ok");
+
+
+
+//            return $userAuthenticator->authenticateUser(
+//                $user,
+//                $authenticator,
+//                $request
+//            );
+        }
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'registrationCSV' => $formCSV->createView()
         ]);
     }
 
