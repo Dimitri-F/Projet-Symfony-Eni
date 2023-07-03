@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Sortie;
 use App\Entity\Etat;
 use App\Form\CreateActivityType;
+use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
@@ -19,11 +21,12 @@ class ActivityController extends AbstractController
 {
 
     #[Route('/create', name: 'app_create')]
-    public function index(EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository, SiteRepository $siteRepository): Response
+    public function index(EtatRepository $etatRepository,LieuRepository $lieuRepository,EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository, SiteRepository $siteRepository): Response
     {
         $userId = $this->getUser()->getId();
         $participant = $participantRepository->find($userId);
         $sites = $siteRepository->findAll();
+        $lieux = [];
         try {
             $activity = new Sortie();
             if($sites = $participant->getSite()){
@@ -33,16 +36,12 @@ class ActivityController extends AbstractController
             $activityForm->handleRequest($request);
             if ($activityForm->isSubmitted() && $activityForm->isSubmitted()) {
                 $activity->setOrganisateur($userId);
+                $villeId = $activityForm->get('ville')->getData();
+                $lieux = $lieuRepository->findByVille($villeId);
                 if($request->request->has('save')){
-                    $etatId = 1;
-                    $etat = $entityManager->getReference(Etat::class, $etatId);
-                    $activity->setEtat($etat);
-                    $activity->setEtatSortie($etatId);
+                    $activity->setEtat($etatRepository->find(1));
                 }elseif ($request->request->has('publish')){
-                    $etatId = 2;
-                    $etat = $entityManager->getReference(Etat::class, $etatId);
-                    $activity->setEtat($etat);
-                    $activity->setEtatSortie($etatId);
+                    $activity->setEtat($etatRepository->find(2));
                 }
                 $entityManager->persist($activity);
                 $entityManager->flush();
@@ -54,20 +53,19 @@ class ActivityController extends AbstractController
         }
         return $this->render('activity/create.html.twig', [
             "activityForm" => $activityForm->createView(),
+            "lieux" => $lieux
+
         ]);
     }
 
     #[Route('remove/{id}','app_remove')]
-    public function remove($id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, Request $request): Response
+    public function remove(EtatRepository $etatRepository,$id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
         $activity = $sortieRepository->find($id);
 
         if ($request->request->has('save')) {
             try {
-                $etatId = 6;
-                $etat = $entityManager->getReference(Etat::class, $etatId);
-                $activity->setEtat($etat);
-                $activity->setEtatSortie($etatId);
+                $activity->setEtat($etatRepository->find(6));
                 $entityManager->persist($activity);
                 $entityManager->flush();
                 $this->addFlash('success', 'La sortie a bien été supprimée');
@@ -93,4 +91,5 @@ class ActivityController extends AbstractController
             "participants" => $participantsInscrits,
         ]);
     }
+
 }

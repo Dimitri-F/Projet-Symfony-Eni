@@ -154,9 +154,14 @@
                 {% elseif sortie.organisateur == user.id %}
                     {% if sortie.etat.id == 1 %}
                         - <a href="{{ path('app_', { 'id': sortie.id }) }}">Publier</a>
-                    {% elseif sortie.dateCloture > dateNow %}
-                        - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>
+                    {#{% elseif sortie.dateCloture > dateNow %}
+                        #}{#- <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>#}
                     {% endif %}
+                {% endif %}
+                {% if is_granted("ROLE_ADMIN") %}
+                    - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>
+                {% elseif sortie.organisateur == user.id and sortie.dateCloture > dateNow and not is_granted("ROLE_ADMIN")%}
+                    - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>
                 {% endif %}
             </td>
         </tr>
