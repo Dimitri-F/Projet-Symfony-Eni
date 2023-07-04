@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+lieux_by_ville:
+    path: '/lieux/{ville}'
+    controller: 'App\Controller\LieuController::getLieuxByVille'
+    requirements:
+        ville: '[^/]+'

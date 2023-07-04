@@ -25,7 +25,7 @@
                     <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
                         {% if is_granted("ROLE_ADMIN") %}
                         <a href="{{ path('app_register') }}" class="mr-5 hover:text-gray-900">Gestion utilisateurs</a>
-                        <a class="mr-5 hover:text-gray-900">Villes</a>
+                        <a href="{{ path('app_manage_lieu') }}" class="mr-5 hover:text-gray-900">Villes</a>
                         <a class="mr-5 hover:text-gray-900">Sites</a>
                         {% endif %}
                         {% if is_granted("ROLE_USER") %}

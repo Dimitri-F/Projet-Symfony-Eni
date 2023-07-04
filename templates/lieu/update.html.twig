@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier les lieux{% endblock %}
+{% block body %}
+    <h1 class="mt-3 text-4xl text-center">{{ ville.nom }}</h1>
+    <div class="mt-3">
+        <table class="table table-pin-rows table-pin-cols w-1/4 mx-auto">
+            <thead>
+                <tr>
+                    <th class="border p-2">Nom du lieu </th>
+                    <th class="border p-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for lieu in lieux %}
+                <tr>
+                    <td class="border p-2">{{ lieu }}</td>
+                    <td class="border p-2">
+                          <a href="{{ path('app_update_lieu') }}">Modifier</a>
+                        - <a href>Supprimer</a>
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
