@@ -229,6 +229,7 @@ class MainController extends AbstractController
             'inscriptions' => $inscriptionsUser,
             'inscriptionsTotals' => $inscriptionsTotals,
             'dateNow' => $heureFrance,
+            'screenWidth' => $screenWidth,
         ]);
     }
 }

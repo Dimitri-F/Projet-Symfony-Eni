@@ -171,6 +171,7 @@
 </div>
     <br>
 {#    Bouton#}
-    <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>
-
+    {% if screenWidth > 600 %}
+        <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>
+    {% endif %}
 {% endblock %}
