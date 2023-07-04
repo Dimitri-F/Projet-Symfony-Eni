@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\Etat;
 use App\Form\CreateActivityType;
+use App\Form\UpdateActivityType;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -29,7 +32,7 @@ class ActivityController extends AbstractController
     }
 
     #[Route('/create', name: 'app_create')]
-    public function index(EtatRepository $etatRepository,LieuRepository $lieuRepository,EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository, SiteRepository $siteRepository): Response
+    public function index(EtatRepository $etatRepository,EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository, SiteRepository $siteRepository): Response
     {
         $currentRequest = $this->requestStack->getCurrentRequest();
 
@@ -42,8 +45,6 @@ class ActivityController extends AbstractController
 
         $userId = $this->getUser()->getId();
         $participant = $participantRepository->find($userId);
-        $sites = $siteRepository->findAll();
-        $lieux = [];
         try {
             $activity = new Sortie();
             if($sites = $participant->getSite()){
@@ -53,8 +54,6 @@ class ActivityController extends AbstractController
             $activityForm->handleRequest($request);
             if ($activityForm->isSubmitted() && $activityForm->isSubmitted()) {
                 $activity->setOrganisateur($userId);
-                $villeId = $activityForm->get('ville')->getData();
-                $lieux = $lieuRepository->findByVille($villeId);
                 if($request->request->has('save')){
                     $activity->setEtat($etatRepository->find(1));
                 }elseif ($request->request->has('publish')){
@@ -70,8 +69,6 @@ class ActivityController extends AbstractController
         }
         return $this->render('activity/create.html.twig', [
             "activityForm" => $activityForm->createView(),
-            "lieux" => $lieux
-
         ]);
     }
 
@@ -85,7 +82,7 @@ class ActivityController extends AbstractController
                 $activity->setEtat($etatRepository->find(6));
                 $entityManager->persist($activity);
                 $entityManager->flush();
-                $this->addFlash('success', 'La sortie a bien été supprimée');
+                $this->addFlash('success', 'La sortie a bien été annulée');
                 return $this->redirectToRoute('app_home');
             } catch (Exception $exception) {
                 $this->addFlash('danger', 'Erreur lors de la suppression de la sortie');
@@ -109,4 +106,32 @@ class ActivityController extends AbstractController
         ]);
     }
 
+    #[Route('/update/{id}','app_update')]
+    public function update($id,Request $request, EntityManagerInterface $entityManager,SortieRepository $sortieRepository,EtatRepository $etatRepository): Response
+    {
+        $activity = $sortieRepository->find($id);
+        $activityForm = $this->createForm(UpdateActivityType::class,$activity);
+        $activityForm->handleRequest($request);
+        try {
+            if($activityForm->isSubmitted() && $activityForm->isValid()){
+                $activity->setLieu($activity->getLieu());
+                if($request->request->has('save')){
+                    $activity->setEtat($etatRepository->find(1));
+                }elseif($request->request->has('publish')) {
+                    $activity->setEtat($etatRepository->find(2));
+                }
+                $entityManager->persist($activity);
+                $entityManager->flush();
+                $this->addFlash('success', 'La sortie a bien été modifiée dans la base de données');
+                return $this->redirectToRoute('app_home');
+        }
+        }catch (Exception $exception){
+            $this->addFlash('danger', 'Erreur lors de la modification de la sortie');
+        }
+
+        return $this->render('activity/update.html.twig',[
+            "activityForm" => $activityForm->createView(),
+            "activity" => $activity
+        ]);
+    }
 }

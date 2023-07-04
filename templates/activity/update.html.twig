@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Création d'une sortie{% endblock %}
+{% block title %}Modifier d'une sortie{% endblock %}
 
 {% block body %}
-    <h1 class="text-4xl mb-8 text-center">Création d'une sortie</h1>
+    <h1 class="text-4xl mb-8 text-center">Modifier une sortie</h1>
     <div class="flex justify-center mt-8">
         <div class="grid grid-cols-2 gap-8">
             <div>
-                {{ form_start(activityForm, {'attr' : {'id' : 'activity_form'}}) }}
+                {{ form_start(activityForm) }}
                 <div class="mt-3 flex flex-col">
                     {{ form_label(activityForm.nom) }}
                     {{ form_widget(activityForm.nom, {'attr': {'class': 'border'}}) }}
@@ -40,16 +40,6 @@
                 </div>
             </div>
             <div class="ml-12">
-                <div class="mt-3 flex flex-col">
-                    {{ form_label(activityForm.site) }}
-                    {{ form_widget(activityForm.site, {'attr': {'class': 'border'}}) }}
-                    {{ form_errors(activityForm.site) }}
-                </div>
-                <div class="mt-3 flex flex-col">
-                    {{ form_label(activityForm.ville) }}
-                    {{ form_widget(activityForm.ville, {'attr': {'class': 'border'}}) }}
-                    {{ form_errors(activityForm.ville) }}
-                </div>
                 <div class="flex items-center">
                     <div class="mt-3 flex flex-col">
                         {{ form_label(activityForm.lieu) }}
@@ -61,67 +51,41 @@
                     </div>
                 </div>
                 <div class="mt-3 flex flex-col">
-                    {{ form_label(activityForm.rue) }}
-                    {{ form_widget(activityForm.rue, {'attr': {'class': 'border'}}) }}
-                    {{ form_errors(activityForm.rue) }}
+                    <label for="rue">Rue :</label>
+                    <input id="rue" name="rue" type="text" value="{{ activity.lieu.rue }}">
                 </div>
                 <div class="mt-3 flex flex-col">
-                    {{ form_label(activityForm.codePostal) }}
-                    {{ form_widget(activityForm.codePostal, {'attr': {'class': 'border'}}) }}
-                    {{ form_errors(activityForm.codePostal) }}
+                    <label for="ville">Ville :</label>
+                    <input id="ville" name="ville" type="ville" value="{{ activity.lieu.ville.nom }}">
                 </div>
                 <div class="mt-3 flex flex-col">
-                    {{ form_label(activityForm.latitude) }}
-                    {{ form_widget(activityForm.latitude, {'attr': {'class': 'border'}}) }}
-                    {{ form_errors(activityForm.latitude) }}
+                    <label for="codePostal">Code Postal :</label>
+                    <input id="codePostal" name="codePostal" type="codePostal" value="{{ activity.lieu.ville.codePostal}}">
                 </div>
                 <div class="mt-3 flex flex-col">
-                    {{ form_label(activityForm.longitude) }}
-                    {{ form_widget(activityForm.longitude, {'attr': {'class': 'border'}}) }}
-                    {{ form_errors(activityForm.longitude) }}
+                    <label for="latitude">Latitude :</label>
+                    <input id="latitude" name="latitude" type="latitude" value="{{ activity.lieu.latitude}}">
+                </div>
+                <div class="mt-3 flex flex-col">
+                    <label for="longitude">Longitude :</label>
+                    <input id="longitude" name="longitude" type="longitude" value="{{ activity.lieu.longitude }}">
                 </div>
             </div>
-            </div>
+        </div>
     </div>
     <div class="mt-6 flex justify-center">
         <button type="submit" name="save" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
             Enregistrer
         </button>
         <button type="submit" name="publish" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
-            Publier
+            Publier la sortie
         </button>
+        <a href="{{ path('app_remove',{'id' : activity.id}) }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4">
+            Supprimer la sortie
+        </a>
         <a href="{{ path('app_home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4">
             Annuler
         </a>
     </div>
     {{ form_end(activityForm) }}
-{% endblock %}
-{% block javascripts %}
-    <script>
-        window.onload = () => {
-            let ville = document.querySelector("#create_activity_ville");
-            ville.addEventListener("change", function (){
-                let form = document.querySelector("#activity_form");
-                let data = this.name + "=" + this.value;
-
-                fetch(form.action,{
-                    method : form.getAttribute("method"),
-                    body : data,
-                    headers : {
-                        "Content-Type" : "application/x-www-form-urlencoded;charset:UTF-8"}
-                })
-                    .then(response => response.text())
-                    .then(html => {
-                        let content  = document.createElement("html");
-                        content.innerHTML = html;
-                        let newSelect = content.querySelector("#create_activity_lieu");
-                        document.querySelector("#create_activity_lieu").replaceWith(newSelect);
-                        console.log(newSelect)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            });
-        }
-    </script>
 {% endblock %}
