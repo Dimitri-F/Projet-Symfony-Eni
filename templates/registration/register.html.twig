@@ -11,21 +11,28 @@
     <div class="w-1/5 mx-auto">
         {{ form_errors(registrationForm) }}
         {{ form_start(registrationForm) }}
-        <div class="mb-3 flex justify-between">
-            {{ form_label(registrationForm.pseudo) }}
-            {{ form_widget(registrationForm.pseudo) }}
+        <div>
+            <div class="mb-3 flex justify-between">
+                {{ form_label(registrationForm.pseudo) }}
+                {{ form_widget(registrationForm.pseudo) }}
+            </div>
             {{ form_errors(registrationForm.pseudo) }}
         </div>
-        <div class="mb-3 flex justify-between">
-            {{ form_label(registrationForm.email) }}
-            {{ form_widget(registrationForm.email) }}
+        <div>
+            <div class="mb-3 flex justify-between">
+                {{ form_label(registrationForm.email) }}
+                {{ form_widget(registrationForm.email) }}
+            </div>
             {{ form_errors(registrationForm.email) }}
         </div>
-        <div class="mb-3 flex justify-between">
-            {{ form_label(registrationForm.plainPassword) }}
-            {{ form_widget(registrationForm.plainPassword) }}
+        <div>
+            <div class="mb-3 flex justify-between">
+                {{ form_label(registrationForm.plainPassword) }}
+                {{ form_widget(registrationForm.plainPassword) }}
+            </div>
             {{ form_errors(registrationForm.plainPassword) }}
         </div>
+
         <div class="mb-3 flex justify-between">
             <label for="lastName">Nom :</label>
             <input class="registrationForm" id="lastName" name="lastName" type="text">
@@ -48,41 +55,23 @@
                 <option value="5">Paris</option>
             </select>
         </div>
-        <div class="mb-3 flex justify-evenly">
-            {{ form_label(registrationForm.agreeTerms) }}
-            {{ form_widget(registrationForm.agreeTerms) }}
-            {{ form_errors(registrationForm.agreeTerms) }}
-        </div>
         <div class="mb-3 flex justify-center">
             <button type="submit" class="btn">Valider</button>
         </div>
         {{ form_end(registrationForm) }}
     </div>
-
-        {# affichage msg d'erreur #}
-{#        {% if app.flashes('error') is not empty %}#}
-{#            {% for messages in app.flashes('error') %}#}
-{#                <div class="alert alert-danger w-2/5 mx-auto flex justify-center items-center">#}
-{#                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">#}
-{#                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />#}
-{#                    </svg>#}
-{#                    <span>{{ messages }}</span>#}
-{#                </div>#}
-{#            {% endfor %}#}
-{#        {% endif %}#}
     </div>
+{#    formulaire pour uplod un fichier CSV#}
     <div class="mt-3">
-        {{ form_start(registrationCSV) }}
-        <div class="w-1/5 mx-auto my-16">
-            <div class="mb-3 flex flex-col text-center">
-                <label for="fileInput" class="form-label text-2xl">Ou choisir un fichier CSV</label>
-                <input type="file" class="form-control" id="fileInput" name="csvFile">
-            </div>
-            <div class="mb-3 flex justify-center">
-                <button type="submit" class="btn">Valider</button>
-            </div>
+        <div class="my-10 flex flex-col text-center">
+            <h2 class="text-xl">Ou choisir un fichier CSV</h2>
+            {{ form_start(registrationCSV) }}
+            {{ form_widget(registrationCSV.csvFile, {'attr': {'class': 'your-class'}}) }}
+            {{ form_errors(registrationCSV.csvFile) }}
+            {{ form_row(registrationCSV._token) }}
+            <button type="submit" class="btn">Soumettre</button>
+            {{ form_end(registrationCSV) }}
         </div>
-        {{ form_end(registrationCSV) }}
     </div>
 
 {% endblock %}

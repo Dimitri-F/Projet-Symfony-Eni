@@ -9,7 +9,7 @@ class CsvImporterService
     public function importCsv($fileName)
     {
         $csv = Reader::createFromPath($fileName, 'r');
-//        $csv->setHeaderOffset(0);
+        $csv->setHeaderOffset(0);
 
         $records = $csv->getRecords();
         $data = [];
@@ -18,8 +18,7 @@ class CsvImporterService
             $data[] = $record;
         }
 
-        // Afficher les données ultérieurement ou les utiliser dans votre logique métier
-        var_dump($data);
+        return $data;
     }
 
 }
