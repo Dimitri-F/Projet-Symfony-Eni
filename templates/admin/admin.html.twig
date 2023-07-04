@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <form method="post" class="flex flex-col items-center">
+        <div class="overflow-x-auto">
+            <table class="table table-pin-rows table-pin-cols">
+                <thead>
+                <tr>
+                    <td>Nom Prénom</td>
+                    <td>Email</td>
+                    <td>Pseudo</td>
+                    <td>Roles</td>
+                    <td>Etat</td>
+                    <td>Activer/Désactiver</td>
+                    <td>Suprimer</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for participant in participants %}
+                    <tr>
+                        <td>{{ participant.nom }}, {{ participant.prenom }}</td>
+                        <td>{{ participant.getcompte.email }}</td>
+                        <td>{{ participant.getcompte.pseudo }}</td>
+                        <td>{{ participant.getcompte.roles[0] }}</td>
+                        <td>{{ participant.actif }}</td>
+                        <td>
+                            {% if participant.actif == 1 %}
+                                <button class="btn btn-warning">Désactiver</button></td>
+                            {% else %}
+                                <button class="btn btn-success">Activer</button></td>
+                            {% endif %}
+                        <td>
+                            <button class="btn" onclick="my_modal_2.showModal()">open modal</button>
+                            <dialog id="my_modal_2" class="modal">
+                                <form method="dialog" class="modal-box">
+                                    <h3 class="font-bold text-lg">Hello!</h3>
+                                    <p class="py-4">Press ESC key or click outside to close</p>
+                                </form>
+                                <form method="dialog" class="modal-backdrop">
+                                    <button>close</button>
+                                </form>
+                            </dialog>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+{% endblock %}
