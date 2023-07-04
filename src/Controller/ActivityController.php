@@ -95,16 +95,21 @@ class ActivityController extends AbstractController
         $activity = $sortieRepository->find($id);
         $activityForm = $this->createForm(UpdateActivityType::class,$activity);
         $activityForm->handleRequest($request);
-
-        if($activityForm->isSubmitted() && $activityForm->isValid()){
-            $activity->setLieu($activity->getLieu()->getVille());
-            if($request->request->has('save')){
-                $activity->setEtat($etatRepository->find(1));
-            }elseif($request->request->has('publish')) {
-                $activity->setEtat($etatRepository->find(2));
-            }
-            $entityManager->persist($activity);
-            $entityManager->flush();
+        try {
+            if($activityForm->isSubmitted() && $activityForm->isValid()){
+                $activity->setLieu($activity->getLieu());
+                if($request->request->has('save')){
+                    $activity->setEtat($etatRepository->find(1));
+                }elseif($request->request->has('publish')) {
+                    $activity->setEtat($etatRepository->find(2));
+                }
+                $entityManager->persist($activity);
+                $entityManager->flush();
+                $this->addFlash('success', 'La sortie a bien été modifiée dans la base de données');
+                return $this->redirectToRoute('app_home');
+        }
+        }catch (Exception $exception){
+            $this->addFlash('danger', 'Erreur lors de la modification de la sortie');
         }
 
         return $this->render('activity/update.html.twig',[
