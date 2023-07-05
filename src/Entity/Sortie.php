@@ -37,9 +37,6 @@ class Sortie
 //    #[ORM\Column(nullable: true)]
 //    private ?int $etatSortie = null;
 
-    #[ORM\Column(length: 250, nullable: true)]
-    private ?string $urlPhoto = null;
-
     #[ORM\ManyToMany(targetEntity: Inscription::class, mappedBy: 'sorties')]
     private Collection $inscriptions;
 
@@ -151,18 +148,6 @@ class Sortie
 //
 //        return $this;
 //    }
-
-    public function getUrlPhoto(): ?string
-    {
-        return $this->urlPhoto;
-    }
-
-    public function setUrlPhoto(?string $urlPhoto): static
-    {
-        $this->urlPhoto = $urlPhoto;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Inscription>

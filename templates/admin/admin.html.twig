@@ -32,15 +32,27 @@
                                 <button class="btn btn-success">Activer</button></td>
                             {% endif %}
                         <td>
-                            <button class="btn" onclick="my_modal_2.showModal()">open modal</button>
-                            <dialog id="my_modal_2" class="modal">
-                                <form method="dialog" class="modal-box">
+                            <button id="openModal">Ouvrir</button>
+
+                            <dialog id="my_modal_2" class="modal modal-open">
+                                <div class="modal-box">
+                                    <h3 class="font-bold text-lg">Hello!</h3>
+                                    <p class="py-4">Appuyez sur la touche ESC ou cliquez en dehors pour fermer</p>
+                                    <div class="modal-action">
+                                        <button id="closeModal" class="btn">Fermer</button>
+                                    </div>
+                                </div>
+                            </dialog>
+
+{#                            <button class="btn" onclick="my_modal_2.showModal()">open modal</button>#}
+                            <a href="#" id="openModal">cc</a>
+
+                            <dialog id="my_modal_2">
+                                <div class="modal-box">
                                     <h3 class="font-bold text-lg">Hello!</h3>
                                     <p class="py-4">Press ESC key or click outside to close</p>
-                                </form>
-                                <form method="dialog" class="modal-backdrop">
-                                    <button>close</button>
-                                </form>
+                                    <button id="closeModal">Close</button>
+                                </div>
                             </dialog>
                         </td>
                     </tr>

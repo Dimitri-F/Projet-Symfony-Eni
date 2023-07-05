@@ -43,6 +43,9 @@ class Participant
     #[ORM\JoinColumn(nullable: false)]
     private ?user $compte = null;
 
+    #[ORM\Column(length: 250, nullable: true)]
+    private ?string $urlPhoto = null;
+
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
@@ -148,6 +151,18 @@ class Participant
     public function setCompte(user $compte): static
     {
         $this->compte = $compte;
+
+        return $this;
+    }
+
+    public function getUrlPhoto(): ?string
+    {
+        return $this->urlPhoto;
+    }
+
+    public function setUrlPhoto(?string $urlPhoto): static
+    {
+        $this->urlPhoto = $urlPhoto;
 
         return $this;
     }

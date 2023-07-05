@@ -34,3 +34,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.cookie = "screen_width=" + width;
     document.cookie = "screen_height=" + height;
 });
+
+// Récupération du bouton d'ouverture du modal
+var openButton = document.getElementById('openModal');
+
+// Ajout d'un écouteur d'événements pour ouvrir le modal lorsqu'un clic est détecté
+openButton.addEventListener('click', function(event) {
+    event.preventDefault(); // Empêche l'action par défaut du bouton
+    var dialog = document.getElementById('my_modal_2'); // Récupère le modal par son ID
+    dialog.showModal(); // Ouvre le modal
+});
+
+// Récupération du bouton de fermeture du modal
+var closeButton = document.getElementById('closeModal');
+
+// Ajout d'un écouteur d'événements pour fermer le modal lorsqu'un clic est détecté
+closeButton.addEventListener('click', function() {
+    var dialog = document.getElementById('my_modal_2'); // Récupère le modal par son ID
+    dialog.close(); // Ferme le modal
+});
+
