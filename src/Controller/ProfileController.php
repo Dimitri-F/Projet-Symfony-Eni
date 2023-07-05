@@ -47,7 +47,7 @@ class ProfileController extends AbstractController
     {
         $user = $this->getUser();
         $userId = $user->getId();
-        // Récupère la liste des utilisateurs existants
+        // Récupère la liste des pseudos des utilisateurs existants
         $pseudoList = array_map(function($user) {
             return $user->getPseudo();
         }, $userRepository->findAll());

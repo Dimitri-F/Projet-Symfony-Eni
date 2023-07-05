@@ -60,6 +60,7 @@ class MainController extends AbstractController
         );
 
 
+        // COOKIE
         $currentRequest = $this->requestStack->getCurrentRequest();
 
         if($currentRequest->cookies->has('screen_width')) {
@@ -67,8 +68,6 @@ class MainController extends AbstractController
             $screenHeight = $currentRequest->cookies->get('screen_height');
             dump($screenWidth,$screenHeight);
         }
-
-
 
 
         // Bloc d'inscription à une sortie
