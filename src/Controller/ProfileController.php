@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\ProfileManagerType;
 use App\Repository\ParticipantRepository;
 use App\Repository\UserRepository;
+use App\Service\FileUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,12 @@ class ProfileController extends AbstractController
         name: 'manage_profile',
         requirements: ["id" => "\d+"]
     )]
-    public function manageProfile($id, EntityManagerInterface $entityManager, ParticipantRepository $participantRepository, UserRepository $userRepository, Request $request): Response
+    public function manageProfile($id, EntityManagerInterface $entityManager,
+                                  ParticipantRepository $participantRepository,
+                                  UserRepository $userRepository,
+                                  Request $request,
+                                  FileUploaderService $fileUploaderService,
+    ): Response
     {
         $user = $this->getUser();
         $userId = $user->getId();
@@ -86,11 +92,21 @@ class ProfileController extends AbstractController
                 // Hacher le mot de passe
                 $hashedPassword =  $this->passwordHasher->hashPassword($user, $password);
 
-                // Définir le mot de passe haché sur le participant
                 $user->setPseudo($pseudo);
+                // Définis le mot de passe hashé sur le participant
                 $user->setPassword($hashedPassword);
 
                 $user->setEmail($email);
+
+                // Upload de la photo de profil
+                $photoFile = $profileForm->get('urlPhoto')->getData();
+                if ($photoFile) {
+                    $uploadedFileName = $fileUploaderService->upload($photoFile);
+                    dump($uploadedFileName);
+                        // Mets à jour le chemin de la photo de profil dans l'entité Participant
+                        $participant->setUrlPhoto($uploadedFileName);
+
+                }
 
                 $entityManager->persist($user);
                 $entityManager->persist($participant);

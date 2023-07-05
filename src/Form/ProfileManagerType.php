@@ -6,6 +6,7 @@ use App\Entity\Participant;
 use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,17 +16,22 @@ class ProfileManagerType extends AbstractType
     {
         $builder
             ->add('prenom', null, [
-                'label' => 'Prénom'
+                'label' => 'Prénom :'
             ])
             ->add('nom', null, [
-                'label' => 'nom'
+                'label' => 'Nom :'
             ])
             ->add('telephone', null, [
-                'label' => 'téléphone'
+                'label' => 'Téléphone :'
             ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nom',
+            ])
+            ->add('urlPhoto', FileType::class, [
+                'label' => 'Photo de profil :',
+                'required' => false,
+                'data_class' => null,
             ])
         ;
     }

@@ -4,9 +4,13 @@
 
 {% block body %}
     <h1 class="text-center text-4xl mb-6">Profil de {{ participant.compte.pseudo }}</h1>
-    <div class="profileForm flex">
-        <div class="w-full shrink-0 grow-0 basis-auto md:w-2/12 lg:w-3/12">
-            <img src="https://fakeimg.pl/350x200/?">
+    <div class="profileForm flex justify-evenly w-1/5">
+        <div class="shrink-0 grow-0 basis-auto md:w-2/12 lg:w-3/12">
+            {% if participant.urlPhoto %}
+                <img src="{{ asset('uploads/' ~ participant.urlPhoto) }}" alt="Photo de profil">
+                {% else %}
+                    <img src="https://fakeimg.pl/350x200/?" alt="Fake photo">
+            {% endif %}
         </div>
         <div class="profileFormTxt">
             {{ form_start(profileForm) }}
@@ -45,6 +49,10 @@
                 {{ form_label(profileForm.site) }}
                 {{ form_widget(profileForm.site) }}
                 {{ form_errors(profileForm.site) }}
+            </div>
+            <div class="group mb-3 flex flex-col justify-between">
+                {{ form_label(profileForm.urlPhoto) }}
+                {{ form_widget(profileForm.urlPhoto) }}
             </div>
             <div class="group mb-3 flex justify-center">
                 <button class="bg-green-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full m-3">Enregistrer</button>
