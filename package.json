@@ -25,6 +25,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "jquery": "^3.7.0",
         "tw-elements": "^1.0.0-beta2"
     }
 }

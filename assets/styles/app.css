@@ -3,27 +3,33 @@
 @tailwind utilities;
 
 
-.profileForm{
-    width: 70vw;
-    margin: 5vh auto;
-}
+/*.profileForm{*/
+/*    width: 70vw;*/
+/*    margin: 5vh auto;*/
+/*}*/
 
-.detailsProfileImg{
-    width: 50%;
-}
+/*.detailsProfileImg{*/
+/*    width: 50%;*/
+/*}*/
 
-.detailsProfileTxt{
-    width: 50%;
-}
+/*.detailsProfileTxt{*/
+/*    width: 50%;*/
+/*}*/
 
-.profileFormTxt{
-    width: 50%;
-    margin-left: 2vw;
-}
+/*.profileFormTxt{*/
+/*    width: 50%;*/
+/*    margin-left: 2vw;*/
+/*}*/
 
-.detailsActivity{
-    width: 75%;
-    margin: auto;
-    color: white;
-}
+/*.detailsActivity{*/
+/*    width: 75%;*/
+/*    margin: auto;*/
+/*    color: white;*/
+/*}*/
 
+.alert-success{
+    --tw-border-opacity: 1;
+    border-color: hsl(var(--su) / var(--tw-border-opacity));
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--su) / var(--tw-bg-opacity));
+}

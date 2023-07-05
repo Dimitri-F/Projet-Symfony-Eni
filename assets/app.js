@@ -27,4 +27,10 @@ initTE({ Datepicker, Input });
 // });
 
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    var width = window.screen.availWidth;
+    var height = window.screen.availHeight;
 
+    document.cookie = "screen_width=" + width;
+    document.cookie = "screen_height=" + height;
+});
