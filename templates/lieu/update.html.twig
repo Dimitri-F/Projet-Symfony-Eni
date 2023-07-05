@@ -15,8 +15,8 @@
                 <tr>
                     <td class="border p-2">{{ lieu }}</td>
                     <td class="border p-2">
-                          <a href="{{ path('app_update_lieu') }}">Modifier</a>
-                        - <a href>Supprimer</a>
+                          <a href="{{ path('app_update_lieu',{'id' : lieuId.id}) }}">Modifier</a>
+                        - <a href="{{ path('app_remove_lieu',{'id' : lieuId.id}) }}">Supprimer</a>
                     </td>
                 </tr>
             </tbody>

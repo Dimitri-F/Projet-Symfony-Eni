@@ -41,3 +41,6 @@
     background-color: red; /* Rouge */
 }
 
+.hidden {
+    display: none;
+}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\FilterCityType;
 use App\Form\LieuType;
 use App\Entity\Lieu;
+use App\Form\UpdatePlaceType;
 use App\Repository\LieuRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,12 +44,14 @@ class LieuController extends AbstractController
         $filterForm = $this->createForm(FilterCityType::class);
         $filterForm->handleRequest($request);
 
-        $filteredCities = [];
+//        $filteredCities = [];
 
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $searchTerm = $filterForm->getData()['nom'];
-            $filteredCities = $villeRepository->findFilterCity($searchTerm);
+        if ($filterForm->isSubmitted()) {
+            $data = $filterForm->getData();
+            $filteredCities = $villeRepository->findFilterCity($data);
+            dump($filteredCities);
         }
+
 
         return $this->render('lieu/managePlace.html.twig', [
             "villes" => $villes,
@@ -60,16 +63,18 @@ class LieuController extends AbstractController
 
 
     #[Route('/lieu/update/{id}','app_update_ville')]
-    public function update($id,VilleRepository $villeRepository): Response
+    public function update($id,VilleRepository $villeRepository,LieuRepository $lieuRepository): Response
     {
         $ville = $villeRepository->find($id);
+        $lieuId = $lieuRepository->find($id);
         $lieux = [];
         foreach ($ville->getLieux() as $lieu) {
             $lieux[] = $lieu->getNom();
         }
         return $this->render('lieu/update.html.twig',[
             "ville" => $ville,
-            "lieux" => $lieux
+            "lieux" => $lieux,
+            "lieuId" => $lieuId
         ]);
     }
 
@@ -97,12 +102,54 @@ class LieuController extends AbstractController
         return $this->render('lieu/delete.html.twig');
     }
 
-    public function updatePlace($id,LieuRepository $lieuRepository) : Response
+    #[Route('/lieu/updatePlace/{id}','app_update_lieu')]
+    public function updatePlace($id,LieuRepository $lieuRepository,Request $request,EntityManagerInterface $entityManager,VilleRepository $villeRepository) : Response
     {
-        $lieu = $lieuRepository->find($id);
+        try {
+            $lieu = $lieuRepository->find($id);
+            $ville = $villeRepository->find($id);
+            $lieuForm = $this->createForm(UpdatePlaceType::class,$lieu);
+            $lieuForm->handleRequest($request);
+
+            if($lieuForm->isSubmitted() && $lieuForm->isValid()){
+                $entityManager->persist($lieu);
+                $entityManager->flush();
+                $this->addFlash('success','Le lieu a bien été modifiée dans la base de données');
+                return $this->redirectToRoute('app_update_ville',['id' => $ville->getId()]);
+            }
+        }catch (Exception $exception){
+            $this->addFlash('danger', 'Erreur lors de la modification du lieu');
+        }
+
 
         return $this->render('lieu/updatePlace.html.twig',[
-            "lieu" => $lieu
+            "lieu" => $lieu,
+            "ville" => $ville,
+            "lieuForm" => $lieuForm->createView()
         ]);
+    }
+
+    #[Route('/lieu/deletePlace/{id}','app_remove_lieu')]
+    public function deletePlace($id,VilleRepository $villeRepository,EntityManagerInterface $entityManager) : Response
+    {
+        try {
+            $ville = $villeRepository->find($id);
+            $lieux = $ville->getLieux();
+            foreach ($lieux as $lieu){
+                if ($lieu->getSorties()->count() > 0) {
+                    $this->addFlash('danger','Impossible de supprimer le lieu car il est lié à une sortie.');
+                    return $this->redirectToRoute('app_update_ville',['id' => $ville->getId()]);
+                }
+                $ville->removeLieux($lieu);
+                $entityManager->remove($lieu);
+            }
+            $entityManager->remove($ville);
+            $entityManager->flush();
+            $this->addFlash('success','Le lieu a bien été supprimée dans la base de données');
+            return $this->redirectToRoute('app_update_ville',['id' => $ville->getId()]);
+        }catch (Exception $exception){
+            $this->addFlash('danger','Erreur lors de la suppression du lieu');
+        }
+        return $this->render('lieu/deletePlace.html.twig');
     }
 }

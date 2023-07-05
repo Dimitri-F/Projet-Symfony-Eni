@@ -153,7 +153,7 @@
                     - <a href="{{ path('app_home', {'desister': sortie.id}) }}">Se désister</a>
                 {% elseif sortie.organisateur == user.id %}
                     {% if sortie.etat.id == 1 %}
-                        - <a href="{{ path('app_', { 'id': sortie.id }) }}">Publier</a>
+                        {#- <a href="{{ path('app_', { 'id': sortie.id }) }}">Publier</a>#}
                     {#{% elseif sortie.dateCloture > dateNow %}
                         #}{#- <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>#}
                     {% endif %}
