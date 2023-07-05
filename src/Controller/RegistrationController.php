@@ -19,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,10 +44,12 @@ class RegistrationController extends AbstractController
                              SiteRepository $siteRepository,
                              CsvImporterService $csvImporterService,
                              UserRepository $userRepository,
+                             SessionInterface $session
     ): Response
     {
         $user = new User();
         $participant = new Participant();
+        $hasAddedANewUser = false;
         // Récupère la liste des pseudos des utilisateurs existants
         $pseudoList = array_map(function($user) {
             return $user->getPseudo();
@@ -64,7 +67,6 @@ class RegistrationController extends AbstractController
         //enregistrement d'un utilisateur par soumission et validation du formulaire
         if ($form->isSubmitted() && $form->isValid()) {
             $pseudo = $form->get('pseudo')->getData();
-
 
             if (in_array($pseudo, $pseudoList)) {
                 // En cas de pseudo déjà utilisé, affiche un message d'erreur
@@ -107,6 +109,16 @@ class RegistrationController extends AbstractController
                     $errorMessage = "Une erreur s'est produite, l'utilisateur n'a pas été crée.";
                     $this->addFlash('error', $errorMessage);
 
+                    // Récupère tous les messages flash enregistrés dans la session
+                    $flashBag = $session->getFlashBag();
+
+                    // Parcourt les messages flash et les ajoute à la liste des erreurs
+                    foreach ($flashBag->all() as $type => $messages) {
+                        foreach ($messages as $message) {
+                            $this->addFlash($type, $message);
+                        }
+                    }
+
                     //redirige vers la page de formulaire d'inscription avec les erreurs affichées
                     return $this->redirectToRoute('app_register');
                 }
@@ -121,7 +133,6 @@ class RegistrationController extends AbstractController
 //            );
 //            // do anything else you need here, like send an email
             }
-
         }
 
         //enregistrement d'un utilisateur par upload d'un fichier CSV
@@ -141,7 +152,7 @@ class RegistrationController extends AbstractController
                     $email = $rowData["email"];
 
                     if (!in_array($pseudo, $pseudoList) && !in_array($email, $emailList)) {
-
+                        $hasAddedANewUser = true;
                         $siteName = $rowData["Site"];
                         $site = $siteRepository->findOneBy(['nom' => $siteName]);
 
@@ -169,12 +180,18 @@ class RegistrationController extends AbstractController
                             $entityManager->persist($user);
                             $entityManager->persist($participant);
                             $entityManager->flush();
+
                         } catch (\Exception $e) {
                             $errorMessage = "Une erreur s'est produite lors de la création de l'utilisateur.";
                             $this->addFlash('error', $errorMessage);
                             return $this->redirectToRoute('app_register');
                         }
                     }
+                }
+                if ($hasAddedANewUser) {
+                    $this->addFlash('success', 'Les utilisateurs ont été créé avec succès.');
+                }else{
+                    $this->addFlash('error', "Aucun utilisateur n'a été créé.");
                 }
             } else {
                 // En cas de fichier non téléchargé, affiche un message d'erreur
@@ -184,8 +201,6 @@ class RegistrationController extends AbstractController
                 // Redirige vers la page de formulaire d'inscription avec les erreurs affichées
                 return $this->redirectToRoute('app_register');
             }
-            $this->addFlash('success', 'Les utilisateurs ont été créés avec succès.');
-
         }
 
         return $this->render('registration/register.html.twig', [
