@@ -22,10 +22,7 @@ class FilterCityType extends AbstractType
 //                ]
 //            ])
             ->add('nom',TextType::class,[
-                "attr" => [
-                    "pattern" => false,
                     'required' => false
-                ]
             ])
 //            ->add('nom',null,[
 //                "attr" => [

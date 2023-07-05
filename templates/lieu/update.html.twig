@@ -3,7 +3,7 @@
 {% block body %}
     <h1 class="mt-3 text-4xl text-center">{{ ville.nom }}</h1>
     <div class="mt-3">
-        <table class="table table-pin-rows table-pin-cols w-1/4 mx-auto">
+        <table class="table table-pin-rows table-pin-cols w-1/5 mx-auto">
             <thead>
                 <tr>
                     <th class="border p-2">Nom du lieu </th>
@@ -16,11 +16,13 @@
                     <td class="border p-2">{{ lieu }}</td>
                     <td class="border p-2">
                           <a href="{{ path('app_update_lieu',{'id' : lieuId.id}) }}">Modifier</a>
-                        - <a href="{{ path('app_remove_lieu',{'id' : lieuId.id}) }}">Supprimer</a>
                     </td>
                 </tr>
             </tbody>
             {% endfor %}
         </table>
+        <div class="flex justify-center mt-8">
+            <a href="{{ path('app_manage_lieu')}}" class="btn">Retour</a>
+        </div>
     </div>
 {% endblock %}
