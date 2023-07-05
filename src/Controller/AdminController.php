@@ -23,11 +23,9 @@ class AdminController extends AbstractController
 
         $participants = $participantRepository->findAll();
 
-        $form = $this->createForm(UserManagementType::class);
 
         return $this->render('admin/admin.html.twig', [
             'participants' => $participants,
-            'form' => $form->createView(),
         ]);
     }
 
@@ -71,5 +69,32 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_admin');
     }
 
+    #[Route('/disable/{id}', name: 'disable', requirements: ["id" => "\d+"])]
+    public function disable(EntityManagerInterface $entityManager, ParticipantRepository $participantRepository, $id): Response
+    {
+
+        $participant = $participantRepository->find($id);
+
+        if ($participant) {
+
+            $isVerified = $participant->getCompte()->isVerified();
+
+            if ($isVerified){
+
+                $participant->getCompte()->setIsVerified(0);
+
+                $entityManager->flush();
+            }else{
+
+                $participant->getCompte()->setIsVerified(1);
+
+                $entityManager->flush();
+            }
+        }
+
+        $participants = $participantRepository->findAll();
+
+        return $this->redirectToRoute('app_admin');
+    }
 
 }
