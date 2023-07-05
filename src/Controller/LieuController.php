@@ -117,7 +117,6 @@ class LieuController extends AbstractController
         if (!$security->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('app_home');
         }
-
         try {
             $lieu = $lieuRepository->find($id);
             $ville = $villeRepository->find($id);
@@ -133,7 +132,6 @@ class LieuController extends AbstractController
         }catch (Exception $exception){
             $this->addFlash('danger', 'Erreur lors de la modification du lieu');
         }
-
 
         return $this->render('lieu/updatePlace.html.twig',[
             "lieu" => $lieu,
