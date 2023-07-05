@@ -17,16 +17,6 @@ import {
 
 initTE({ Datepicker, Input });
 
-
-    // Désactiver la validation des champs du formulaire lorsque le bouton "cancel" est cliqué
-    //Dans la vue manageProfile.html.twig
-//     document.querySelector('button[name="cancel"]').addEventListener('click', function () {
-//     Array.from(document.querySelectorAll('.profileForm input, .profileForm select')).forEach(function (element) {
-//         element.removeAttribute('required');
-//     });
-// });
-
-
 document.addEventListener('DOMContentLoaded', (event) => {
     var width = window.screen.availWidth;
     var height = window.screen.availHeight;
@@ -35,22 +25,48 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.cookie = "screen_height=" + height;
 });
 
-// Récupération du bouton d'ouverture du modal
-var openButton = document.getElementById('openModal');
 
-// Ajout d'un écouteur d'événements pour ouvrir le modal lorsqu'un clic est détecté
-openButton.addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche l'action par défaut du bouton
-    var dialog = document.getElementById('my_modal_2'); // Récupère le modal par son ID
-    dialog.showModal(); // Ouvre le modal
+/////////////////////////////// POPUP POUR SUPPRIMER UN USER
+
+// Récupération des boutons d'ouverture et de fermeture des modaux
+var openButtons = document.querySelectorAll('[id^="openModal_"]');
+var closeButtons = document.querySelectorAll('[id^="closeModal_"]');
+var backdropCloseButtons = document.querySelectorAll('[id^="backdropClose_"]');
+
+// Pour chaque bouton d'ouverture, ajouter un écouteur d'événements
+openButtons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche l'action par défaut du bouton
+        var id = button.id.split('_')[1]; // Récupère l'ID du participant
+        var dialog = document.getElementById('my_modal_' + id); // Récupère le modal correspondant
+        dialog.showModal(); // Ouvre le modal
+    });
 });
 
-// Récupération du bouton de fermeture du modal
-var closeButton = document.getElementById('closeModal');
-
-// Ajout d'un écouteur d'événements pour fermer le modal lorsqu'un clic est détecté
-closeButton.addEventListener('click', function() {
-    var dialog = document.getElementById('my_modal_2'); // Récupère le modal par son ID
-    dialog.close(); // Ferme le modal
+// Pour chaque bouton de fermeture, ajouter un écouteur d'événements
+closeButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+        var id = button.id.split('_')[1]; // Récupère l'ID du participant
+        var dialog = document.getElementById('my_modal_' + id); // Récupère le modal correspondant
+        dialog.close(); // Ferme le modal
+    });
 });
 
+// Pour chaque bouton de fermeture sur le fond, ajouter un écouteur d'événements
+backdropCloseButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+        var id = button.id.split('_')[1]; // Récupère l'ID du participant
+        var dialog = document.getElementById('my_modal_' + id); // Récupère le modal correspondant
+        dialog.close(); // Ferme le modal
+    });
+});
+
+var deleteButtons = document.querySelectorAll('.btn-error');
+
+deleteButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+        var userId = this.getAttribute('data-id');
+        var deleteInput = document.getElementById('delete');
+        deleteInput.value = userId;
+    });
+});
