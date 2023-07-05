@@ -17,15 +17,32 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ActivityController extends AbstractController
 {
 
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
     #[Route('/create', name: 'app_create')]
     public function index(EtatRepository $etatRepository,EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository, SiteRepository $siteRepository): Response
     {
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        if($currentRequest->cookies->has('screen_width')) {
+            $screenWidth = $currentRequest->cookies->get('screen_width');
+        }
+        if ($screenWidth < 600){
+            return $this->redirectToRoute('app_home');
+        }
+
         $userId = $this->getUser()->getId();
         $participant = $participantRepository->find($userId);
         try {

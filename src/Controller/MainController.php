@@ -16,17 +16,31 @@ use Doctrine\ORM\EntityManagerInterface;
 use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+
+
+use Symfony\Component\HttpFoundation\RequestStack;
 
 // Classe MainController héritant de AbstractController
 class MainController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
+
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+    #[Route('/home', name: 'app_home', methods: ['GET', 'POST'])]
     // Cette méthode est utilisée pour le rendu de la page d'accueil
     public function home(Request $request, SiteRepository $siteRepository, SortieRepository $sortieRepository,
-                         EtatRepository $etatRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository, EntityManagerInterface $entityManager): Response
+                         EtatRepository $etatRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository,
+                         EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         // Récupération des données de requête
         $inscrie = $request->query->get('inscrie');
@@ -44,6 +58,18 @@ class MainController extends AbstractController
             $heureFrance->format('Y-m-d H:i:s'),
             new \DateTimeZone('UTC')
         );
+
+
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        if($currentRequest->cookies->has('screen_width')) {
+            $screenWidth = $currentRequest->cookies->get('screen_width');
+            $screenHeight = $currentRequest->cookies->get('screen_height');
+            dump($screenWidth,$screenHeight);
+        }
+
+
+
 
         // Bloc d'inscription à une sortie
         if ($inscrie !== null) {
@@ -197,6 +223,13 @@ class MainController extends AbstractController
             $sorties = $sortieRepository->findFilteredSorties($data, $data['isOrganisateur'], $data['isInscrit'], $data['isNotInscrit'], $data['isPassed']);
         }
 
+//        $email = (new Email())
+//            ->from('Papercut@papercut.com')
+//            ->to('sebc118@gmail.com')
+//            ->subject('Hello Email')
+//            ->text('Sending emails is fun again with Symfony Mailer!');
+//
+//        $mailer->send($email);
 
         // Rendu de la vue avec les données nécessaires
         return $this->render('main/home.html.twig', [
@@ -208,6 +241,7 @@ class MainController extends AbstractController
             'inscriptions' => $inscriptionsUser,
             'inscriptionsTotals' => $inscriptionsTotals,
             'dateNow' => $heureFrance,
+            'screenWidth' => $screenWidth,
         ]);
     }
 }
