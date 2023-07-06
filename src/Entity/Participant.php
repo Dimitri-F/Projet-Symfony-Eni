@@ -34,14 +34,14 @@ class Participant
 
     #[ORM\ManyToOne(inversedBy: 'participants')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?site $site = null;
+    private ?Site $site = null;
 
     #[ORM\ManyToMany(targetEntity: Inscription::class, mappedBy: 'participants')]
     private Collection $inscriptions;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $compte = null;
+    private ?User $compte = null;
 
     #[ORM\Column(length: 250, nullable: true)]
     private ?string $urlPhoto = null;
@@ -104,12 +104,12 @@ class Participant
         return $this;
     }
 
-    public function getSite(): ?site
+    public function getSite(): ?Site
     {
         return $this->site;
     }
 
-    public function setSite(?site $site): static
+    public function setSite(?Site $site): static
     {
         $this->site = $site;
 
@@ -143,12 +143,12 @@ class Participant
         return $this;
     }
 
-    public function getCompte(): ?user
+    public function getCompte(): ?User
     {
         return $this->compte;
     }
 
-    public function setCompte(user $compte): static
+    public function setCompte(User $compte): static
     {
         $this->compte = $compte;
 

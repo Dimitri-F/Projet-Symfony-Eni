@@ -4,22 +4,15 @@ namespace App\Controller;
 
 // Importation des classes nécessaires
 use App\Entity\Inscription;
-use App\Entity\Participant;
 use App\Form\FilterHomeType;
-use App\Form\UpdateInscriptionType;
 use App\Repository\EtatRepository;
 use App\Repository\InscriptionRepository;
 use App\Repository\ParticipantRepository;
-use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use mysql_xdevapi\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 
@@ -38,7 +31,7 @@ class MainController extends AbstractController
     }
     #[Route('/home', name: 'app_home', methods: ['GET', 'POST'])]
     // Cette méthode est utilisée pour le rendu de la page d'accueil
-    public function home(Request $request, SiteRepository $siteRepository, SortieRepository $sortieRepository,
+    public function home(Request $request, SortieRepository $sortieRepository,
                          EtatRepository $etatRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository,
                          EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {

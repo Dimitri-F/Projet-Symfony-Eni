@@ -18,7 +18,7 @@ class Site
     #[ORM\Column(length: 50)]
     private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'site', targetEntity: sortie::class)]
+    #[ORM\OneToMany(mappedBy: 'site', targetEntity: Sortie::class)]
     private Collection $sorties;
 
     #[ORM\OneToMany(mappedBy: 'site', targetEntity: Participant::class)]
@@ -48,14 +48,14 @@ class Site
     }
 
     /**
-     * @return Collection<int, sortie>
+     * @return Collection<int, Sortie>
      */
     public function getSorties(): Collection
     {
         return $this->sorties;
     }
 
-    public function addSorty(sortie $sorty): static
+    public function addSorty(Sortie $sorty): static
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties->add($sorty);
@@ -65,7 +65,7 @@ class Site
         return $this;
     }
 
-    public function removeSorty(sortie $sorty): static
+    public function removeSorty(Sortie $sorty): static
     {
         if ($this->sorties->removeElement($sorty)) {
             // set the owning side to null (unless already changed)

@@ -33,7 +33,7 @@ class Ville
         maxMessage : "Le code postal doit avoir un maximum de 10 caractères")]
     private ?string $codePostal = null;
 
-    #[ORM\OneToMany(mappedBy: 'ville', targetEntity: lieu::class)]
+    #[ORM\OneToMany(mappedBy: 'ville', targetEntity: Lieu::class)]
     private Collection $lieux;
 
     public function __construct()
@@ -78,7 +78,7 @@ class Ville
         return $this->lieux;
     }
 
-    public function addLieux(lieu $lieux): static
+    public function addLieux(Lieu $lieux): static
     {
         if (!$this->lieux->contains($lieux)) {
             $this->lieux->add($lieux);
@@ -88,7 +88,7 @@ class Ville
         return $this;
     }
 
-    public function removeLieux(lieu $lieux): static
+    public function removeLieux(Lieu $lieux): static
     {
         if ($this->lieux->removeElement($lieux)) {
             // set the owning side to null (unless already changed)

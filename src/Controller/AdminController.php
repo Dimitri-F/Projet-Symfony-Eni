@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\ParticipantRepository;
 use App\Repository\UserRepository;
-use App\Form\UserManagementType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -18,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AdminController extends AbstractController
 {
     #[Route('', name: 'admin')]
-    public function admin(UserRepository $userRepository, ParticipantRepository $participantRepository): Response
+    public function admin(ParticipantRepository $participantRepository): Response
     {
 
         $participants = $participantRepository->findAll();
@@ -30,8 +29,8 @@ class AdminController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', requirements: ["id" => "\d+"])]
-    public function delete(ParticipantRepository $participantRepository, UserRepository $userRepository, InscriptionRepository $inscriptionRepository,
-                           EntityManagerInterface $entityManager,SortieRepository $sortieRepository, $id): Response
+    public function delete(ParticipantRepository $participantRepository, EntityManagerInterface $entityManager,
+                           SortieRepository $sortieRepository, $id): Response
     {
         // Récupérer le participant à partir de l'ID
         $participant = $participantRepository->find($id);
