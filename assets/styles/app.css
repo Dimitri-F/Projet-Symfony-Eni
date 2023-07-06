@@ -9,11 +9,13 @@
 }
 
 /*.detailsProfileImg{*/
-/*    width: 50%;*/
+/*    float: left;*/
+/*    width: 40%;*/
 /*}*/
 
 /*.detailsProfileTxt{*/
-/*    width: 50%;*/
+/*    float: right;*/
+/*    width: 40%;*/
 /*}*/
 
 /*.profileFormTxt{*/
@@ -35,7 +37,7 @@
 }
 
 .blockImg {
-   height: 150px;
+   height: 300px;
     width: 300px;
 }
 
