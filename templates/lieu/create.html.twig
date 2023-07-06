@@ -4,29 +4,39 @@
     <h1 class="text-4xl mb-8 text-center">Ajout d'un lieu</h1>
     {{ form_start(lieuForm) }}
     <div class="w-1/5 mx-auto">
-        <div class="flex justify-between mt-3">
-            {{ form_label(lieuForm.ville) }}
-            {{ form_widget(lieuForm.ville) }}
-            {{ form_errors(lieuForm.ville) }}
+        <div>
+            <div class="flex justify-between mt-3">
+                {{ form_label(lieuForm.ville) }}
+                {{ form_widget(lieuForm.ville) }}
+            </div>
+                {{ form_errors(lieuForm.ville) }}
         </div>
+        <div>
         <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.nom) }}
             {{ form_widget(lieuForm.nom) }}
+        </div>
             {{ form_errors(lieuForm.nom) }}
         </div>
-        <div class="flex justify-between mt-3">
-            {{ form_label(lieuForm.rue) }}
-            {{ form_widget(lieuForm.rue) }}
-            {{ form_errors(lieuForm.rue) }}
+        <div>
+            <div class="flex justify-between mt-3">
+                {{ form_label(lieuForm.rue) }}
+                {{ form_widget(lieuForm.rue) }}
+            </div>
+                {{ form_errors(lieuForm.rue) }}
         </div>
-        <div class="flex justify-between mt-3">
-            {{ form_label(lieuForm.latitude) }}
-            {{ form_widget(lieuForm.latitude) }}
-            {{ form_errors(lieuForm.latitude) }}
-        </div>
+        <div>
+            <div class="flex justify-between mt-3">
+                {{ form_label(lieuForm.latitude) }}
+                {{ form_widget(lieuForm.latitude) }}
+            </div>
+                {{ form_errors(lieuForm.latitude) }}
+            </div>
+        <div>
         <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.longitude) }}
             {{ form_widget(lieuForm.longitude) }}
+        </div>
             {{ form_errors(lieuForm.longitude) }}
         </div>
     </div>
