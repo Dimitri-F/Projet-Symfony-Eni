@@ -8,15 +8,12 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
 
 class CreateActivityType extends AbstractType
 {
@@ -24,15 +21,17 @@ class CreateActivityType extends AbstractType
     {
         $builder
             ->add('nom', null,[
-                "label" => "Nom de la sortie :"
+                "label" => "Nom de la sortie :",
+                "required" => false,
             ])
             ->add('dateDebut', DateTimeType::class, [
                 'widget' => 'single_text',
                 'data' => new \DateTime(),
                 'by_reference' => true,
             ])
+
             ->add('duree',null,[
-                "label" => "Durée :"
+                "label" => "Durée :",
             ])
             ->add('dateCloture', DateTimeType::class, [
                 'widget' => 'single_text',
@@ -40,7 +39,8 @@ class CreateActivityType extends AbstractType
                 'by_reference' => true,
             ])
             ->add('nbInscriptionsMax',null,[
-                "label" => "Nombre de place :"
+                "label" => "Nombre de place :",
+                "required" => false
             ])
             ->add('descriptionInfos',TextareaType::class,[
                 "label" => "Description et infos :"
@@ -63,12 +63,15 @@ class CreateActivityType extends AbstractType
                 ],
             ])
 
-            ->add('lieu', ChoiceType::class, [
-                'placeholder' => 'Lieu (Choisir une ville)',
+            ->add('lieu', EntityType::class, [
+                'class' => Lieu::class,
+                'choice_label' => 'nom',
+                'multiple' => false
             ])
             ->add('rue',TextType::class,[
                 'label' => 'Rue :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -76,6 +79,7 @@ class CreateActivityType extends AbstractType
             ->add('codePostal',TextType::class,[
                 'label' => 'Code Postal :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -83,6 +87,7 @@ class CreateActivityType extends AbstractType
             ->add('latitude',TextType::class,[
                 'label' => 'Latitude :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -90,29 +95,12 @@ class CreateActivityType extends AbstractType
             ->add('longitude',TextType::class,[
                 'label' => 'Longitude :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
             ])
             ;
-        $formModifier = function (FormInterface $form, Ville $ville = null){
-            $lieux = (null === $ville) ? [] : $ville->getLieux();
-            $form->add('lieu',EntityType::class,[
-                'class' => Lieu::class,
-                'choices' => $lieux,
-                'choice_label' => 'nom',
-                'placeholder' => 'Lieu (Choisir une ville)',
-                'label' => 'Lieu',
-            ]);
-        };
-
-        $builder->get('ville')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($formModifier){
-                $ville = $event->getForm()->getData();
-                $formModifier($event->getForm()->getParent(),$ville);
-            }
-        );
     }
     public function configureOptions(OptionsResolver $resolver): void
     {

@@ -2,24 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Lieu;
 use App\Entity\Sortie;
-use App\Entity\Etat;
 use App\Form\CreateActivityType;
 use App\Form\UpdateActivityType;
 use App\Repository\EtatRepository;
-use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
-use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ActivityController extends AbstractController
 {
@@ -43,32 +42,35 @@ class ActivityController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        $userId = $this->getUser()->getId();
-        $participant = $participantRepository->find($userId);
+        $activity = new Sortie();
+        $activityForm = $this->createForm(CreateActivityType::class, $activity);
+        $activityForm->handleRequest($request);
+
         try {
-            $activity = new Sortie();
+            $userId = $this->getUser()->getId();
+            $participant = $participantRepository->find($userId);
             if($sites = $participant->getSite()){
                 $activity->setSite($sites);
             }
-            $activityForm = $this->createForm(CreateActivityType::class, $activity);
-            $activityForm->handleRequest($request);
-            if ($activityForm->isSubmitted() && $activityForm->isSubmitted()) {
+
+            if ($activityForm->isSubmitted() && $activityForm->isValid()) {
                 $activity->setOrganisateur($userId);
-                if($request->request->has('save')){
-                    $activity->setEtat($etatRepository->find(1));
-                }elseif ($request->request->has('publish')){
-                    $activity->setEtat($etatRepository->find(2));
+                    if ($request->request->has('save')) {
+                        $activity->setEtat($etatRepository->find(1));
+                    } elseif ($request->request->has('publish')) {
+                        $activity->setEtat($etatRepository->find(2));
+                    }
+                    $entityManager->persist($activity);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'La sortie a bien été créee dans la base de données');
+                    return $this->redirectToRoute('app_home');
                 }
-                $entityManager->persist($activity);
-                $entityManager->flush();
-                $this->addFlash('success', 'La sortie a bien été créee dans la base de données');
-                return $this->redirectToRoute('app_home');
-            }
-        }catch (Exception $exception){
+
+            }catch (Exception $exception){
             $this->addFlash('danger','Erreur lors de la création de la sortie');
         }
         return $this->render('activity/create.html.twig', [
-            "activityForm" => $activityForm->createView(),
+            "activityForm" => $activityForm->createView()
         ]);
     }
 

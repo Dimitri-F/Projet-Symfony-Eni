@@ -18,6 +18,9 @@ class Ville
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank(message : "Le nom ne peut pas être vide" )]
+    #[Assert\Regex(pattern : "/^[A-Za-z]*$/",
+        message : "Le nom doit contenir que des lettres",
+        match : true )]
     #[Assert\Length(min : 3, max: 30,
         minMessage : "Le nom doit avoir un minimum de 3 caractères",
         maxMessage : "Le nom doit avoir un maximum de 30 caractères")]
@@ -25,9 +28,9 @@ class Ville
 
     #[ORM\Column(length: 10)]
     #[Assert\NotBlank(message : "Le code postal ne peut pas être vide" )]
-    #[Assert\Regex(pattern : "/^[A-Za-z0-9]$/",
+    #[Assert\Regex(pattern : "/^[A-Za-z0-9]+$/",
                    message : "Le code postal doit contenir que des lettres et des chiffres",
-                   match : false )]
+                   match : true )]
     #[Assert\Length(min : 5, max : 10,
         minMessage : "Le code postal doit avoir un minimum de 5 caractères",
         maxMessage : "Le code postal doit avoir un maximum de 10 caractères")]

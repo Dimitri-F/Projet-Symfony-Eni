@@ -4,10 +4,12 @@
     <h1 class="text-4xl mb-8 text-center">Ajout d'un site</h1>
     {{ form_start(siteForm) }}
     <div class="mx-auto w-1/5">
-        <div class="flex justify-between mt-3">
-            {{ form_label(siteForm.nom) }}
-            {{ form_widget(siteForm.nom) }}
-            {{ form_errors(siteForm.nom) }}
+        <div>
+            <div class="flex justify-between mt-3">
+                {{ form_label(siteForm.nom) }}
+                {{ form_widget(siteForm.nom) }}
+            </div>
+                {{ form_errors(siteForm.nom) }}
         </div>
     </div>
     <div class="flex justify-center mt-8">

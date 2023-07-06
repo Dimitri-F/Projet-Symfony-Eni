@@ -6,6 +6,7 @@ use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
 class Lieu
@@ -16,15 +17,29 @@ class Lieu
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\Length(min : 2, max: 30, minMessage: "test",maxMessage: "Le nom ne doit pas dépasser les 30 caractères")]
+    #[Assert\NotBlank(message : "Le nom ne peut pas être vide" )]
+    #[Assert\Regex(pattern : "/^[A-Za-z]*$/",
+        message : "Le nom doit contenir que des lettres",
+        match : true )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 30, nullable: true)]
+    #[Assert\Regex(pattern : '/^[A-Za-z0-9\s\-\'"]*$/',
+        message : "La rue doit contenir uniquement des lettres, des chiffres, des espaces et les caractères spéciaux - \' ",
+        match : true )]
     private ?string $rue = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Regex(pattern : "/^[0-9.]*$/",
+        message : "La latitude doit contenir que des lettres et des points",
+        match : true )]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Regex(pattern : "/^[0-9.]*$/",
+        message : "La longitude doit contenir que des lettres et des points",
+        match : true )]
     private ?float $longitude = null;
 
     #[ORM\OneToMany(mappedBy: 'lieu', targetEntity: Sortie::class)]

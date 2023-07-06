@@ -6,6 +6,7 @@ use App\Repository\SiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 class Site
@@ -16,6 +17,10 @@ class Site
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Le nom de la sortie ne peut pas être null")]
+    #[Assert\Regex(pattern : "/^[A-Za-z]*$/",
+        message : "Le nom doit contenir que des lettres",
+        match : true )]
     private ?string $nom = null;
 
     #[ORM\OneToMany(mappedBy: 'site', targetEntity: Sortie::class)]

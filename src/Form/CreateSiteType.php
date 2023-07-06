@@ -13,7 +13,11 @@ class CreateSiteType extends AbstractType
     {
         $builder
             ->add('nom',null,[
-                "label" => "Nom du site :"
+                "label" => "Nom du site :",
+                "required" => false,
+                "attr" => [
+                    "pattern" => false
+                ]
             ])
         ;
     }
