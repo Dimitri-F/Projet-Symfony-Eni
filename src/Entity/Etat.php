@@ -18,7 +18,7 @@ class Etat
     #[ORM\Column(length: 30)]
     private ?string $libelle = null;
 
-    #[ORM\OneToMany(mappedBy: 'etat', targetEntity: sortie::class)]
+    #[ORM\OneToMany(mappedBy: 'etat', targetEntity: Sortie::class)]
     private Collection $etat;
 
     public function __construct()
@@ -44,14 +44,14 @@ class Etat
     }
 
     /**
-     * @return Collection<int, sortie>
+     * @return Collection<int, Sortie>
      */
     public function getEtat(): Collection
     {
         return $this->etat;
     }
 
-    public function addEtat(sortie $etat): static
+    public function addEtat(Sortie $etat): static
     {
         if (!$this->etat->contains($etat)) {
             $this->etat->add($etat);
@@ -61,7 +61,7 @@ class Etat
         return $this;
     }
 
-    public function removeEtat(sortie $etat): static
+    public function removeEtat(Sortie $etat): static
     {
         if ($this->etat->removeElement($etat)) {
             // set the owning side to null (unless already changed)

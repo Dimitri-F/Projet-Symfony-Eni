@@ -24,7 +24,7 @@ class CityType extends AbstractType
                 'label' => 'Code Postal :',
                 'required' => false,
                 'attr' => [
-                    'pattern' => '/^[A-Za-z0-9]$/',
+                    'pattern' => false,
                 ],
             ])
         ;

@@ -24,34 +24,34 @@
                         <td>{{ participant.getcompte.email }}</td>
                         <td>{{ participant.getcompte.pseudo }}</td>
                         <td>{{ participant.getcompte.roles[0] }}</td>
-                        <td>{{ participant.actif }}</td>
                         <td>
-                            {% if participant.actif == 1 %}
-                                <button class="btn btn-warning">Désactiver</button></td>
+                            {% if participant.getcompte.isVerified %}
+                                ✔
                             {% else %}
-                                <button class="btn btn-success">Activer</button></td>
+                                ❌
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if participant.getcompte.isVerified %}
+                                <a href="{{ path('app_disable', {'id': participant.id}) }}" class="btn btn-warning">Désactiver</a></td>
+                            {% else %}
+                                <a href="{{ path('app_disable', {'id': participant.id}) }}" class="btn btn-success">Activer</a></td>
                             {% endif %}
                         <td>
-                            <button id="openModal">Ouvrir</button>
-
-                            <dialog id="my_modal_2" class="modal modal-open">
+                            <button id="openModal_{{ participant.id }}" type="button" class="btn btn-error">Supprimer</button>
+                            <dialog id="my_modal_{{ participant.id }}" class="modal">
                                 <div class="modal-box">
                                     <h3 class="font-bold text-lg">Hello!</h3>
-                                    <p class="py-4">Appuyez sur la touche ESC ou cliquez en dehors pour fermer</p>
+                                    <p class="py-4">Êtes vous sûr de vouloir supprimer {{ participant.getcompte.pseudo }} ?</p>
                                     <div class="modal-action">
-                                        <button id="closeModal" class="btn">Fermer</button>
+{#                                        <button class="btn btn-error" data-id="{{ participant.id }}">Supprimer User</button>#}
+{#                                        <button class="btn btn-error delete-user" data-id="{{ participant.id }}">Supprimer User</button>#}
+                                        <a href="{{ path('app_delete', {'id': participant.id}) }}" class="btn btn-error">Supprimer User</a>
+                                        <button id="closeModal_{{ participant.id }}" type="button" class="btn">Fermer</button>
                                     </div>
                                 </div>
-                            </dialog>
-
-{#                            <button class="btn" onclick="my_modal_2.showModal()">open modal</button>#}
-                            <a href="#" id="openModal">cc</a>
-
-                            <dialog id="my_modal_2">
-                                <div class="modal-box">
-                                    <h3 class="font-bold text-lg">Hello!</h3>
-                                    <p class="py-4">Press ESC key or click outside to close</p>
-                                    <button id="closeModal">Close</button>
+                                <div method="dialog" class="modal-backdrop">
+                                    <button id="backdropClose_{{ participant.id }}" type="button">close</button>
                                 </div>
                             </dialog>
                         </td>

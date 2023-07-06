@@ -1,0 +1,17 @@
+{% extends 'base.html.twig'%}
+{% block title %}Modifier d'un site{% endblock %}
+{% block body %}
+    <h1 class="text-4xl mb-8 text-center">Modifier le site {{ site.nom }}</h1>
+    {{ form_start(siteForm) }}
+    <div class="mx-auto w-1/5">
+        <div class="flex justify-between mt-3">
+            {{ form_label(siteForm.nom) }}
+            {{ form_widget(siteForm.nom) }}
+            {{ form_errors(siteForm.nom) }}
+        </div>
+    </div>
+    <div class="flex justify-center mt-8">
+        <button type="submit" class="btn btn-success mx-3">Enregistrer</button>
+    </div>
+    {{ form_end(siteForm) }}
+{% endblock %}

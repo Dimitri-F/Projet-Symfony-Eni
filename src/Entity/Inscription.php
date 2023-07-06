@@ -19,10 +19,10 @@ class Inscription
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateInscription = null;
 
-    #[ORM\ManyToMany(targetEntity: sortie::class, inversedBy: 'inscriptions')]
+    #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'inscriptions')]
     private Collection $sorties;
 
-    #[ORM\ManyToMany(targetEntity: participant::class, inversedBy: 'inscriptions')]
+    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'inscriptions')]
     private Collection $participants;
 
     public function __construct()
@@ -49,14 +49,14 @@ class Inscription
     }
 
     /**
-     * @return Collection<int, sortie>
+     * @return Collection<int, Sortie>
      */
     public function getSorties(): Collection
     {
         return $this->sorties;
     }
 
-    public function addSorty(sortie $sorty): static
+    public function addSorty(Sortie $sorty): static
     {
         if (!$this->sorties->contains($sorty)) {
             $this->sorties->add($sorty);
@@ -65,7 +65,7 @@ class Inscription
         return $this;
     }
 
-    public function removeSorty(sortie $sorty): static
+    public function removeSorty(Sortie $sorty): static
     {
         $this->sorties->removeElement($sorty);
 
@@ -80,7 +80,7 @@ class Inscription
         return $this->participants;
     }
 
-    public function addParticipant(participant $participant): static
+    public function addParticipant(Participant $participant): static
     {
         if (!$this->participants->contains($participant)) {
             $this->participants->add($participant);
@@ -89,7 +89,7 @@ class Inscription
         return $this;
     }
 
-    public function removeParticipant(participant $participant): static
+    public function removeParticipant(Participant $participant): static
     {
         $this->participants->removeElement($participant);
 

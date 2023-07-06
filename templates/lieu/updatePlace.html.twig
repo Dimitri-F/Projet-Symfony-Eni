@@ -1,14 +1,10 @@
 {% extends 'base.html.twig' %}
-{% block title %}Création d'un lieu{% endblock %}
+{% block title %}Modification d'un lieu{% endblock %}
 {% block body %}
-    <h1 class="text-4xl mb-8 text-center">Ajout d'un lieu</h1>
+    <h1 class="text-4xl mb-8 text-center">Modification du lieu</h1>
     {{ form_start(lieuForm) }}
     <div class="w-1/5 mx-auto">
-        <div class="flex justify-between mt-3">
-            {{ form_label(lieuForm.ville) }}
-            {{ form_widget(lieuForm.ville) }}
-            {{ form_errors(lieuForm.ville) }}
-        </div>
+
         <div class="flex justify-between mt-3">
             {{ form_label(lieuForm.nom) }}
             {{ form_widget(lieuForm.nom) }}
@@ -32,6 +28,7 @@
     </div>
     <div class="flex justify-center mt-8">
         <button type="submit" class="btn btn-success mx-3">Enregistrer</button>
+        <a href="{{ path('app_update_ville' , {'id' : ville.id}) }}" class="btn btn-error">Retour</a>
     </div>
     {{ form_end(lieuForm) }}
 {% endblock %}

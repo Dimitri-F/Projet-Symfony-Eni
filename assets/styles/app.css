@@ -9,13 +9,11 @@
 }
 
 /*.detailsProfileImg{*/
-/*    float: left;*/
-/*    width: 40%;*/
+/*    width: 50%;*/
 /*}*/
 
 /*.detailsProfileTxt{*/
-/*    float: right;*/
-/*    width: 40%;*/
+/*    width: 50%;*/
 /*}*/
 
 /*.profileFormTxt{*/
@@ -34,6 +32,13 @@
     border-color: hsl(var(--su) / var(--tw-border-opacity));
     --tw-bg-opacity: 1;
     background-color: hsl(var(--su) / var(--tw-bg-opacity));
+}
+
+.alert-danger {
+    --tw-border-opacity: 1;
+    border-color: red; /* Rouge */
+    --tw-bg-opacity: 1;
+    background-color: red; /* Rouge */
 }
 
 .blockImg {
