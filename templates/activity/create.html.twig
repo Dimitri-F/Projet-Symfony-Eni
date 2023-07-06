@@ -104,3 +104,91 @@
     </div>
     {{ form_end(activityForm) }}
 {% endblock %}
+{% block javascripts %}
+
+    <script>
+        window.onload = () => {
+            var villes = {{ villes|raw }};
+            var lieux = {{ lieux|raw }};
+            console.log(lieux);
+
+            var selectElementlieu = document.getElementById("create_activity_lieu");
+            var selectElementVille = document.getElementById("create_activity_ville");
+
+            selectElementlieu.innerHTML = '';
+
+            var rue = document.getElementById("create_activity_rue");
+            var codePostal = document.getElementById("create_activity_codePostal");
+            var latitude = document.getElementById("create_activity_latitude");
+            var longitude = document.getElementById("create_activity_longitude");
+
+            selectElementVille.addEventListener("change", function() {
+                var selectedVille = selectElementVille.value;
+
+                // Efface toutes les options existantes à l'exception de celle par défaut
+                // while (selectElementlieu.options.length > 0) {
+                //     selectElementlieu.remove(1);
+                // }
+                selectElementlieu.innerHTML = '';
+
+                // // Utilisez les données JavaScript plutôt que les données Twig
+                // lieux.forEach(function(lieu) {
+                //     if (lieu.idVille == selectedVille) {
+                //         var option = document.createElement("option");
+                //         option.text = lieu.nom;
+                //         option.value = lieu.id;
+                //         selectElementlieu.appendChild(option);
+                //     }
+                // });
+                // Ajouter une nouvelle option
+                var option = document.createElement("option");
+                option.value = null; // remplacez "1" par la valeur que vous voulez
+                option.text = "Texte de l'option"; // remplacez "Texte de l'option" par le texte que vous voulez afficher
+
+                // Ajouter la nouvelle option au select
+                selectElementlieu.appendChild(option);
+
+                // Sélectionner la nouvelle option
+                selectElementlieu.value = 1;
+
+
+                // Au début de votre script, créez un objet vide pour stocker vos objets lieu
+                var lieuxMap = {};
+
+                // Ensuite, lorsque vous parcourez vos lieux, stockez chaque objet lieu dans lieuxMap en utilisant l'ID du lieu comme clé
+                lieux.forEach(function(lieu) {
+                    lieuxMap[lieu.id] = lieu; // Stocker l'objet lieu
+
+                    if (lieu.idVille == selectedVille) {
+                        var option = document.createElement("option");
+                        option.text = lieu.nom;
+                        option.value = lieu.id;
+                        selectElementlieu.appendChild(option);
+                    }
+
+                });
+
+                // Maintenant, lorsque vous avez besoin d'accéder à un objet lieu, vous pouvez le faire en utilisant son ID comme une clé dans lieuxMap
+                selectElementlieu.addEventListener("change", function() {
+                    var selectedLieu = lieuxMap[selectElementlieu.value]; // Accéder à l'objet lieu
+                    console.log(selectedLieu);
+                    rue.value = selectedLieu.rue;
+                    latitude.value = selectedLieu.latitude;
+                    longitude.value = selectedLieu.longitude;
+
+
+                });
+            });
+
+            selectElementlieu.addEventListener("change", function() {
+                var selectedLieu = selectElementlieu.value;
+                var selectedVille = selectElementVille.value; // Ajout de cette ligne pour définir selectedVille
+                rue.value = lieux[selectedLieu].rue;
+                codePostal.value = villes[selectedVille].codePostal;
+                latitude.value = lieux[selectedLieu].latitude;
+                longitude.value = lieux[selectedLieu].longitude;
+            });
+        }
+    </script>
+
+{% endblock %}

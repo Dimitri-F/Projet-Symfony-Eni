@@ -6,8 +6,10 @@ use App\Entity\Lieu;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use Doctrine\ORM\Query\Expr\Select;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,9 +42,8 @@ class CreateActivityType extends AbstractType
             ])
             ->add('nbInscriptionsMax',null,[
                 "label" => "Nombre de place :",
-                "required" => false
             ])
-            ->add('descriptionInfos',TextareaType::class,[
+            ->add('descriptionInfos',TextType::class,[
                 "label" => "Description et infos :"
             ])
             ->add('site',EntityType::class,[
@@ -68,10 +69,14 @@ class CreateActivityType extends AbstractType
                 'choice_label' => 'nom',
                 'multiple' => false
             ])
+
+//            ->add('lieu', EntityType::class, [
+//                'class' => Lieu::class,
+//                'placeholder' => 'Choisir une lieu',
+//            ])
             ->add('rue',TextType::class,[
                 'label' => 'Rue :',
                 'mapped' => false,
-                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -79,7 +84,6 @@ class CreateActivityType extends AbstractType
             ->add('codePostal',TextType::class,[
                 'label' => 'Code Postal :',
                 'mapped' => false,
-                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -87,7 +91,6 @@ class CreateActivityType extends AbstractType
             ->add('latitude',TextType::class,[
                 'label' => 'Latitude :',
                 'mapped' => false,
-                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -95,7 +98,6 @@ class CreateActivityType extends AbstractType
             ->add('longitude',TextType::class,[
                 'label' => 'Longitude :',
                 'mapped' => false,
-                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],

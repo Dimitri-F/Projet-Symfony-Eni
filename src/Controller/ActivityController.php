@@ -6,9 +6,11 @@ use App\Entity\Sortie;
 use App\Form\CreateActivityType;
 use App\Form\UpdateActivityType;
 use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,8 +33,22 @@ class ActivityController extends AbstractController
     }
 
     #[Route('/create', name: 'app_create')]
-    public function index(EtatRepository $etatRepository,EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository, SiteRepository $siteRepository): Response
+    public function index(EtatRepository $etatRepository,EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository,
+                          SiteRepository $siteRepository, VilleRepository $villeRepository, LieuRepository $lieuRepository): Response
     {
+        $villes = $villeRepository->findAll();
+        $lieux = $lieuRepository->findAll();
+
+        // Convertir les entités en tableaux
+        $villesArray = array_map(function ($ville) {
+            return ['id' => $ville->getId(), 'nom' => $ville->getNom(), 'codePostal' => $ville->getCodePostal()]; // Remplacez 'getId' et 'getName' par vos propres méthodes
+        }, $villes);
+
+        $lieuxArray = array_map(function ($lieu) {
+            return ['id' => $lieu->getId(), 'idVille' => $lieu->getVille()->getId() ,'nom' => $lieu->getNom(), 'rue' => $lieu->getRue(), 'latitude' => $lieu->getLatitude(), 'longitude' => $lieu->getLongitude()]; // Remplacez 'getId' et 'getName' par vos propres méthodes
+        }, $lieux);
+
+
         $currentRequest = $this->requestStack->getCurrentRequest();
 
         if($currentRequest->cookies->has('screen_width')) {
@@ -42,6 +58,8 @@ class ActivityController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
+
+
         $activity = new Sortie();
         $activityForm = $this->createForm(CreateActivityType::class, $activity);
         $activityForm->handleRequest($request);
@@ -49,28 +67,44 @@ class ActivityController extends AbstractController
         try {
             $userId = $this->getUser()->getId();
             $participant = $participantRepository->find($userId);
+
             if($sites = $participant->getSite()){
                 $activity->setSite($sites);
             }
 
-            if ($activityForm->isSubmitted() && $activityForm->isValid()) {
+
+            if ($activityForm->isSubmitted()) {
+
                 $activity->setOrganisateur($userId);
-                    if ($request->request->has('save')) {
-                        $activity->setEtat($etatRepository->find(1));
-                    } elseif ($request->request->has('publish')) {
-                        $activity->setEtat($etatRepository->find(2));
-                    }
-                    $entityManager->persist($activity);
-                    $entityManager->flush();
-                    $this->addFlash('success', 'La sortie a bien été créee dans la base de données');
-                    return $this->redirectToRoute('app_home');
+
+                if ($request->request->has('save')) {
+                    $activity->setEtat($etatRepository->find(1));
+                } elseif ($request->request->has('publish')) {
+                    $activity->setEtat($etatRepository->find(2));
+                }
+
+//                $lieuId = $request->request->get('activityForm')['lieu'];
+//                $lieu = $lieuRepository->find($lieuId);
+//                $activity->setLieu($lieu);
+
+//                $lieuId = $activityForm->get('lieu')->getData();
+//                $lieu = $lieuRepository->find($lieuId);
+//                $activity->setLieu($lieu);
+
+
+                $entityManager->persist($activity);
+                $entityManager->flush();
+                $this->addFlash('success', 'La sortie a bien été créee dans la base de données');
+                return $this->redirectToRoute('app_home');
                 }
 
             }catch (Exception $exception){
             $this->addFlash('danger','Erreur lors de la création de la sortie');
         }
         return $this->render('activity/create.html.twig', [
-            "activityForm" => $activityForm->createView()
+            "activityForm" => $activityForm->createView(),
+            "villes" => json_encode($villesArray),
+            "lieux" => json_encode($lieuxArray),
         ]);
     }
 
