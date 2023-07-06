@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -17,18 +18,25 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Le nom de la sortie ne peut pas être vide")]
+    #[Assert\Regex(pattern : "/^[A-Za-z]*$/",
+        message : "Le nom doit contenir que des lettres",
+        match : true )]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\GreaterThanOrEqual(value: 1,message: "La durée ne peut pas négative ou nulle")]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCloture = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThanOrEqual(value: 1,message: "Le nombre de places disponibles doit être d'au moins 1.")]
+    #[Assert\NotBlank(message: "Le nombre de places ne peut pas être nulle")]
     private ?int $nbInscriptionsMax = null;
 
     #[ORM\Column(length: 500, nullable: true)]
