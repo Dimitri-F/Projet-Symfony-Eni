@@ -21,6 +21,9 @@ class LieuController extends AbstractController
     #[Route('/lieu/create','app_create_lieu')]
     public function create(EntityManagerInterface $entityManager,Request $request): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
         try {
             $lieu = new Lieu();
             $lieuForm = $this->createForm(LieuType::class,$lieu);

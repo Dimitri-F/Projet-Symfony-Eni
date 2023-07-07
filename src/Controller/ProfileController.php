@@ -29,6 +29,9 @@ class ProfileController extends AbstractController
     )]
     public function profileDetails($id, ParticipantRepository $participantRepository, ): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
         $participant = $participantRepository->find($id);
         if ($participant === null) {
             // Redirige ou gère le cas où le participant n'est pas trouvé
@@ -51,6 +54,9 @@ class ProfileController extends AbstractController
                                   FileUploaderService $fileUploaderService,
     ): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
         $user = $this->getUser();
         if (!$user) {
             // Redirection vers la page de connexion

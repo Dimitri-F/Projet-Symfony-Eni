@@ -36,6 +36,11 @@ class ActivityController extends AbstractController
     public function index(EtatRepository $etatRepository,EntityManagerInterface $entityManager, Request $request,ParticipantRepository $participantRepository,
                           SiteRepository $siteRepository, VilleRepository $villeRepository, LieuRepository $lieuRepository): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
+
+
         $villes = $villeRepository->findAll();
         $lieux = $lieuRepository->findAll();
 
@@ -117,6 +122,9 @@ class ActivityController extends AbstractController
     #[Route('remove/{id}','app_remove')]
     public function remove(EtatRepository $etatRepository,$id, SortieRepository $sortieRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
         $activity = $sortieRepository->find($id);
 
         if ($request->request->has('save')) {
@@ -139,6 +147,9 @@ class ActivityController extends AbstractController
     #[Route('/details/{id}','app_details')]
     public function details($id,SortieRepository $sortieRepository,ParticipantRepository $participantRepository): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
         $activity = $sortieRepository->find($id);
         $participantsInscrits = $participantRepository->findParticipantsInscrits($id);
 
@@ -151,6 +162,9 @@ class ActivityController extends AbstractController
     #[Route('/update/{id}','app_update')]
     public function update($id,Request $request, EntityManagerInterface $entityManager,SortieRepository $sortieRepository,EtatRepository $etatRepository): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
         $activity = $sortieRepository->find($id);
         $activityForm = $this->createForm(UpdateActivityType::class,$activity);
         $activityForm->handleRequest($request);
