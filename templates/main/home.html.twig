@@ -116,7 +116,7 @@
             {% for sortie in sorties %}
                 <tr>
                     <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.dateDebut.format('d-m-Y H:i:s') }}</td>
+                    <td>{{ sortie.dateDebut.format('d-m-Y H:i') }}</td>
                     <td>{{ sortie.dateCloture.format('d-m-Y') }}</td>
                     <td> {{ inscriptionsTotals[sortie.id] }} / {{ sortie.nbInscriptionsMax }} </td>
                     <td>{% for etat in etats %}
@@ -161,10 +161,10 @@
                                 - <a href="{{ path('app_update',{'id' : sortie.id}) }}">Modifier</a>
                             {% endif %}
                         {% endif %}
-                        {% if is_granted("ROLE_ADMIN") %}
+                        {% if sortie.organisateur == user.id and sortie.dateCloture > dateNow %}
                             - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>
-                        {% elseif sortie.organisateur == user.id and sortie.dateCloture > dateNow and not is_granted("ROLE_ADMIN")%}
-                            - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>
+{#                        {% elseif is_granted("ROLE_ADMIN") %}#}
+{#                            - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>#}
                         {% endif %}
                     </td>
                 </tr>

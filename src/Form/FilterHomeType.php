@@ -47,7 +47,9 @@ class FilterHomeType extends AbstractType
             ->add('isPassed', CheckboxType::class, [
                 'required' => false,
             ])
-            ->add('search', SubmitType::class)
+            ->add('search', SubmitType::class, [
+                'label' => 'Rechercher',
+                ])
         ;
     }
 

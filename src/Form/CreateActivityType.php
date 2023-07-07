@@ -77,6 +77,7 @@ class CreateActivityType extends AbstractType
             ->add('rue',TextType::class,[
                 'label' => 'Rue :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -84,6 +85,7 @@ class CreateActivityType extends AbstractType
             ->add('codePostal',TextType::class,[
                 'label' => 'Code Postal :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -91,6 +93,7 @@ class CreateActivityType extends AbstractType
             ->add('latitude',TextType::class,[
                 'label' => 'Latitude :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],
@@ -98,6 +101,7 @@ class CreateActivityType extends AbstractType
             ->add('longitude',TextType::class,[
                 'label' => 'Longitude :',
                 'mapped' => false,
+                'required' => false,
                 'attr' => [
                     'class' => 'mt-3 text-center',
                 ],

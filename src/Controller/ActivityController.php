@@ -64,24 +64,29 @@ class ActivityController extends AbstractController
         $activityForm = $this->createForm(CreateActivityType::class, $activity);
         $activityForm->handleRequest($request);
 
-        try {
-            $userId = $this->getUser()->getId();
-            $participant = $participantRepository->find($userId);
 
-            if($sites = $participant->getSite()){
-                $activity->setSite($sites);
-            }
+        if($activity->getDuree() > 1 || $activity->getNbInscriptionsMax() > 1) {
 
+            try {
+                $userId = $this->getUser()->getId();
+                $participant = $participantRepository->find($userId);
 
-            if ($activityForm->isSubmitted()) {
-
-                $activity->setOrganisateur($userId);
-
-                if ($request->request->has('save')) {
-                    $activity->setEtat($etatRepository->find(1));
-                } elseif ($request->request->has('publish')) {
-                    $activity->setEtat($etatRepository->find(2));
+                if ($sites = $participant->getSite()) {
+                    $activity->setSite($sites);
                 }
+
+
+                if ($activityForm->isSubmitted() && $activityForm->isValid()) {
+
+                    $activity->setOrganisateur($userId);
+
+                    if ($request->request->has('save')) {
+                        $activity->setEtat($etatRepository->find(1));
+                    } elseif ($request->request->has('publish')) {
+                        $activity->setEtat($etatRepository->find(2));
+                    }
+
+//                    $activity->setDuree($activity->getDuree()*60);
 
 //                $lieuId = $request->request->get('activityForm')['lieu'];
 //                $lieu = $lieuRepository->find($lieuId);
@@ -92,14 +97,15 @@ class ActivityController extends AbstractController
 //                $activity->setLieu($lieu);
 
 
-                $entityManager->persist($activity);
-                $entityManager->flush();
-                $this->addFlash('success', 'La sortie a bien été créee dans la base de données');
-                return $this->redirectToRoute('app_home');
+                    $entityManager->persist($activity);
+                    $entityManager->flush();
+                    $this->addFlash('success', 'La sortie a bien été créee dans la base de données');
+                    return $this->redirectToRoute('app_home');
                 }
 
-            }catch (Exception $exception){
-            $this->addFlash('danger','Erreur lors de la création de la sortie');
+            } catch (Exception $exception) {
+                $this->addFlash('danger', 'Erreur lors de la création de la sortie');
+            }
         }
         return $this->render('activity/create.html.twig', [
             "activityForm" => $activityForm->createView(),
