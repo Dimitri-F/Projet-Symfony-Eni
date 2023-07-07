@@ -35,6 +35,11 @@ class MainController extends AbstractController
                          EtatRepository $etatRepository, ParticipantRepository $participantRepository, InscriptionRepository $inscriptionRepository,
                          EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
+        if ($this->getUser() == null){
+            return $this->redirectToRoute('app_login');
+        }
+
+
         // Récupération des données de requête
         $inscrie = $request->query->get('inscrie');
         $desister = $request->query->get('desister');
