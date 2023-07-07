@@ -64,7 +64,7 @@
             </select>
         </div>
         <div class="mb-3 flex justify-center">
-            <button type="submit" class="btn">Valider</button>
+            <button type="submit" class="btn btn-success hover:bg-green-300">Valider</button>
         </div>
         {{ form_end(registrationForm) }}
     </div>
@@ -77,9 +77,13 @@
             {{ form_widget(registrationCSV.csvFile, {'attr': {'class': 'your-class'}}) }}
             {{ form_errors(registrationCSV.csvFile) }}
             {{ form_row(registrationCSV._token) }}
-            <button type="submit" class="btn">Soumettre</button>
+            <button type="submit" class="btn btn-info hover:bg-blue-300">Soumettre</button>
             {{ form_end(registrationCSV) }}
         </div>
     </div>
+    <div class="text-center">
+        <a href="{{ path('app_admin') }}" class="btn btn-warning hover:bg-yellow-300">Gestion des utilisateurs</a>
+    </div>
+
 
 {% endblock %}

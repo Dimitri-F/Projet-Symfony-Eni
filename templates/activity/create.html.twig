@@ -4,7 +4,8 @@
 
 {% block body %}
     <h1 class="text-4xl mb-8 text-center">Création d'une sortie</h1>
-    <div class="flex justify-center mt-8">
+    <div class="shadow-2xl rounded-lg p-10 w-2/3 mx-auto">
+    <div class="flex justify-center">
         <div class="grid grid-cols-2 gap-8">
             <div>
                 {{ form_start(activityForm) }}
@@ -92,15 +93,16 @@
         </script>
     </div>
     <div class="mt-6 flex justify-center">
-        <button type="submit" name="save" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        <button type="submit" name="save" class="py-2 px-4 ml-4 btn btn-info hover:bg-blue-300">
             Enregistrer
         </button>
-        <button type="submit" name="publish" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
+        <button type="submit" name="publish" class="py-2 px-4 ml-4 btn btn-success hover:bg-green-300">
             Publier
         </button>
-        <a href="{{ path('app_home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4">
+        <a href="{{ path('app_home') }}" class="py-2 px-4 ml-4 btn btn-error hover:bg-red-300">
             Annuler
         </a>
+    </div>
     </div>
     {{ form_end(activityForm) }}
 {% endblock %}

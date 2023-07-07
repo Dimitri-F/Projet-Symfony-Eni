@@ -15,14 +15,14 @@
                 <tr>
                     <td class="border p-2">{{ lieu }}</td>
                     <td class="border p-2">
-                          <a href="{{ path('app_update_lieu',{'id' : lieuId.id}) }}">Modifier</a>
+                          <a href="{{ path('app_update_lieu',{'id' : lieuId.id}) }}" class="btn btn-outline btn-warning">Modifier</a>
                     </td>
                 </tr>
             </tbody>
             {% endfor %}
         </table>
         <div class="flex justify-center mt-8">
-            <a href="{{ path('app_manage_lieu')}}" class="btn">Retour</a>
+            <a href="{{ path('app_manage_lieu')}}" class="py-2 px-4 ml-4 btn btn-info hover:bg-blue-300">Retour</a>
         </div>
     </div>
 {% endblock %}

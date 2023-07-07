@@ -21,6 +21,7 @@
 
     {#    Côté Gauche  #}
 
+{#    <div class="bg-blue-400" style="background: #e2e2e2; padding: 15px">#}
     <div style="float:left;width:50%;">
 
             {# Select site #}
@@ -89,19 +90,21 @@
 
         {# bouton de recherche tout a droite #}
         <div style="float:left;width:20%;">
-            {{ form_widget(filterForm.search, {'attr': {'class': 'btn'}}) }}
+            {{ form_widget(filterForm.search, {'attr': {'class': 'btn btn-info hover:bg-blue-300'}}) }}
         </div>
-
+{#    </div>#}
     {{ form_end(filterForm) }}
+
 
     <div style="clear: both;"></div>
     <br>
 
 {#  Tableau #}
     <div class="overflow-x-auto h-96">
+        <div class="border rounded-lg overflow-hidden dark:border-gray-700">
         <table class="table table-pin-rows table-pin-cols">
             <thead>
-            <tr>
+            <tr class="bg-blue-400 text-white text-base">
                 <td>Nom de la sortie</td>
                 <td>Date de la sortie</td>
                 <td>Clôture</td>
@@ -113,8 +116,16 @@
             </tr>
             </thead>
             <tbody>
+            {% set bg = true %}
             {% for sortie in sorties %}
-                <tr>
+                <tr {% if bg %}
+                        class="bg-gray-200 text-base"
+                    {% set bg = false %}
+                {% else %}
+                    class="bg-gray-100 text-base"
+                    {% set bg = true %}
+                    {% endif %}
+                >
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateDebut.format('d-m-Y H:i') }}</td>
                     <td>{{ sortie.dateCloture.format('d-m-Y') }}</td>
@@ -129,12 +140,12 @@
                         {% set checkbox = true %}
                         {% for inscription in inscriptions %}
                             {% if sortie.id == inscription %}
-                                <input type="checkbox" checked="checked" class="checkbox checkbox-xs" disabled />
+                                ✔
                                 {% set checkbox = false %}
                             {% endif %}
                         {% endfor %}
                         {% if checkbox %}
-                            <input type="checkbox" class="checkbox checkbox-xs" disabled />
+                            ❌
                         {% endif %}
                     </td>
                     <td>{% for participant in participants %}
@@ -145,26 +156,26 @@
                     </td>
                     <td>
                         {% if sortie.dateDebut|date_modify('+30 days') > dateNow %}
-                            <a href="{{ path('app_details', { 'id': sortie.id }) }}">Afficher</a>
+                            <a href="{{ path('app_details', { 'id': sortie.id }) }}" class="btn btn-outline btn-info">Afficher</a>
                         {% endif %}
                         {% if checkbox and sortie.organisateur != user.id and inscriptionsTotals[sortie.id] != sortie.nbInscriptionsMax and sortie.etat.id == 2 %}
-                            - <a href="{{ path('app_home', {'inscrie': sortie.id}) }}">S'inscrire</a>
+                            <a href="{{ path('app_home', {'inscrie': sortie.id}) }}" class="btn btn-outline btn-success">S'inscrire</a>
                         {% elseif checkbox == false and sortie.etat.id == 2 %}
-                            - <a href="{{ path('app_home', {'desister': sortie.id}) }}">Se désister</a>
+                            <a href="{{ path('app_home', {'desister': sortie.id}) }}" class="btn btn-outline btn-error">Se désister</a>
                         {% elseif sortie.organisateur == user.id %}
                             {% if sortie.etat.id == 1 %}
-                                - <a href="{{ path('app_', { 'id': sortie.id }) }}">Publier</a>
+                                <a href="{{ path('app_', { 'id': sortie.id }) }}">Publier</a>
                                 {#{% elseif sortie.dateCloture > dateNow %}
                                 #}{#- <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>#}
                             {% endif %}
                             {% if sortie.etat.id == 1 or sortie.etat.id == 2 %}
-                                - <a href="{{ path('app_update',{'id' : sortie.id}) }}">Modifier</a>
+                                <a href="{{ path('app_update',{'id' : sortie.id}) }}" class="btn btn-outline btn-warning">Modifier</a>
                             {% endif %}
                         {% endif %}
                         {% if sortie.organisateur == user.id and sortie.dateCloture > dateNow %}
-                            - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>
+                            <a href="{{ path('app_remove', { 'id': sortie.id }) }}" class="btn btn-outline btn-error">Annuler</a>
 {#                        {% elseif is_granted("ROLE_ADMIN") %}#}
-{#                            - <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>#}
+{#                            <a href="{{ path('app_remove', { 'id': sortie.id }) }}">Annuler</a>#}
                         {% endif %}
                     </td>
                 </tr>
@@ -172,9 +183,10 @@
             </tbody>
         </table>
     </div>
+    </div>
     <br>
 {#    Bouton#}
     {% if screenWidth > 600 %}
-        <a href="{{ path('app_create') }}"><button class="btn">Créer une sortie</button></a>
+        <a href="{{ path('app_create') }}"><button class="btn btn-info hover:bg-blue-300">Créer une sortie</button></a>
     {% endif %}
 {% endblock %}

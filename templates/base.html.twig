@@ -15,16 +15,22 @@
 </head>
 <body>
     <div class="container-fluid">
-            <header class="text-gray-600 body-font mb-3">
+            <header class="text-white body-font mb-3 bg-blue-400">
                 <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-                    <a class="flex title-font font-medium items-center text-gray-900 my-8 md:mb-0">
-                         <i class="fa-solid fa-person-through-window fa-2xl ml-3"></i>
-                        <span class="ml-5 text-xl uppercase">Sortir.com</span>
+                    <a class="flex items-center title-font font-medium text-gray-900 md:mb-0">
+                        <div class="logo">
+                            <a href="{{ path('app_home') }}">
+                            <img src="{{ asset('assets/img/sortie.png') }}" alt="logo">
+                            </a>
+                        </div>
+                        <a href="{{ path('app_home') }}">
+                            <span class="text-white ml-5 text-3xl uppercase">Sortir.com</span>
+                        </a>
                     </a>
 
-                    <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
+                    <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center text-xl ">
                         {% if is_granted("ROLE_ADMIN") %}
-                        <a href="{{ path('app_register') }}" class="mr-5 hover:text-gray-900">Gestion utilisateurs</a>
+                        <a href="{{ path('app_register') }}" class="mr-5 hover:text-gray-900">Administrateur</a>
                         <a href="{{ path('app_manage_lieu') }}" class="mr-5 hover:text-gray-900">Villes</a>
                         <a href="{{ path('app_manage_site') }}" class="mr-5 hover:text-gray-900">Sites</a>
                         {% endif %}
